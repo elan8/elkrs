@@ -70,25 +70,63 @@ consequence of comparing two different trig implementations bit-for-bit.
 ~83% of our radial sample was bit-exact, roughly consistent with the
 README's own "~93% of radial trees bit-exact" figure (small sample here).
 
-## `radial_wide_branch_001` — NOT ULP noise, undocumented, unresolved
+## `radial_wide_branch_001` — root-caused: it's the oracle that's non-reproducible, not elkrs
 
 Found by `tools/fuzz_diff.py --algorithm radial` (seed 900, case index 54),
 i.e. by fuzzing beyond the curated corpus above — an 18-node random tree
-with one node having 5 children. 90 fields differ, by up to **~41.6** units
-(`/height: 305.97 != 347.54`), not 1 ULP. Deltas vary in both sign and
-magnitude across different subtrees (not a uniform scale/offset either), so
-this looks like a genuinely different structural placement for at least one
-subtree, not accumulated floating-point noise.
+with one node having 5 children. Minimized to 14 nodes
+(`tools/gen_goldens.py`'s siblings, `radial_min/minimize.py`, not checked
+in). 68 fields differ by up to **~15.3** units — not 1 ULP, not the
+transcendental-noise phenomenon above.
 
-This is **not** the same phenomenon as the 1-ULP cases above — the main
-README's "~1 ULP residual" characterization does not cover this. Whether
-it's specifically triggered by wide branching (the diverging node's 5-way
-wedge-space split) hasn't been confirmed beyond this one case; that's a
-plausible lead given `src/alg_radial/p1position.rs`'s wedge/angle
-calculations, not a diagnosis. Flagging as open — worth root-causing before
-relying on this port for radial layouts with wide branching factors.
-Repro: `cases/radial_wide_branch_001.json` /
-`expected/radial_wide_branch_001.json`.
+**Root cause: the real ELK oracle is not deterministic for this input.**
+Running `oracle/` on the identical minimized case 5 times in separate JVM
+processes produced 4 identical results and **1 different one** — real ELK's
+own output flip-flops from run to run, with no input change at all.
+`elkrs`'s Rust output, by contrast, was identical across every run (it's a
+pure function of its input).
+
+Traced to `org.eclipse.elk.alg.radial`'s overlap-removal phase,
+`RadiusExtensionOverlapRemoval.extend()`
+(`intermediate/overlaps/RadiusExtensionOverlapRemoval.java`, ELK 0.11.0
+sources from Maven Central):
+
+```java
+Set<ElkNode> nextLevelNodes = RadialUtil.getNextLevelNodeSet(nodes);  // a HashSet<ElkNode>
+for (ElkNode nextLevelNode : nextLevelNodes) { ... }                  // iterated directly
+...
+sorter.sort(new ArrayList<>(nextLevelNodes));                         // fed to the sorter in that order
+```
+
+`getNextLevelNodeSet` returns a plain `HashSet<ElkNode>`
+(`RadialUtil.java`). `ElkNode` doesn't override `hashCode()`, so it's
+Java's default identity hash — derived from the object's JVM-internal
+identity, not its content, and not reproducible across separate JVM runs.
+When the configured sorter (order-id assignment for angular placement) has
+**ties** among siblings — plausible with wide branching, where several
+children can be geometrically symmetric — a stable sort preserves whatever
+relative order the input arrived in, so the tie-break outcome inherits the
+HashSet's non-reproducible order. Different JVM run, different identity
+hashes, different bucket order, different tie-break, different final
+position for the tied siblings.
+
+`elkrs`'s Rust port already substitutes a deterministic `Vec` here
+(`src/alg_radial/util.rs`'s `get_next_level_node_set`,
+`src/alg_radial/overlaps.rs:22-24`: *"The next level is iterated in the
+deterministic insertion order..."*) — the exact "`LinkedHashMap`/`Set` →
+`indexmap`" substitution the main README's fidelity rules describe doing
+throughout the port. This one just wasn't flagged as order-*sensitive*
+during porting, because normally it isn't — only wide-branching inputs with
+symmetric ties expose it, and this fuzzer is what finally found one.
+
+**This is not an elkrs bug**, and isn't really fixable in the "match Java"
+sense: there is no single canonical Java output to match when the oracle
+itself is non-reproducible. It's the same class of divergence as the main
+README's already-documented "Identity-hash-ordered collections" item — that
+list just didn't have a `radial` instance yet. Repro:
+`cases/radial_wide_branch_001.json` / `expected/radial_wide_branch_001.json`
+(the `expected/` file is one specific, non-canonical JVM run — re-running
+`oracle/` on the same input may legitimately produce a different result).
 
 ## What passed
 

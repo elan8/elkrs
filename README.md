@@ -120,10 +120,14 @@ byte-exact. They are recorded so future cases are chosen with the caveats in min
 > Coverage now spans all 12 algorithms (134 of 138 cases bit-identical); the
 > oracle's `pom.xml` and per-algorithm input gotchas are in
 > `oracle/README.md`. Fuzzing `radial` beyond the curated corpus surfaced a
-> **new, unresolved, non-cosmetic** divergence — up to ~42 units off, not 1
-> ULP — on an 18-node tree with a 5-way branch; see
-> `goldens/known_divergences/README.md`'s `radial_wide_branch_001` entry.
-> Not yet root-caused.
+> non-cosmetic divergence — up to ~42 units off, not 1 ULP — on trees with
+> wide branching. Root-caused: it's real ELK's own oracle that's
+> non-reproducible (confirmed by running it 5x on one input and getting 2
+> different results), traced to a `HashSet<ElkNode>` iterated by identity
+> hash in `RadiusExtensionOverlapRemoval` feeding a tie-sensitive sort — the
+> same class of divergence as item 2 below, just an instance that wasn't
+> previously catalogued. See `goldens/known_divergences/README.md`'s
+> `radial_wide_branch_001` entry for the full trace.
 
 1. **Transcendental ULP** — `Math.sin/cos/log` are not correctly-rounded by the
    JVM or any libm; HotSpot's intrinsics differ from Apple libm/musl by ≤1 ULP on
@@ -137,7 +141,13 @@ byte-exact. They are recorded so future cases are chosen with the caveats in min
    disco's `DCGraph@<hash>` debug string (the `@hash` is stripped from goldens —
    the only post-processing); spore's triangulation (handled by a bit-exact JDK-8
    `HashSet`/`HashMap` replica, `jhash.rs`, so spore *is* reproducible); various
-   layered tie-breaks (proven order-invariant for the result).
+   layered tie-breaks (proven order-invariant for the result); **radial's
+   `RadiusExtensionOverlapRemoval`** — iterates a `HashSet<ElkNode>` and feeds it
+   to the configured sorter in that order, so sibling ties (plausible with wide
+   branching) tie-break non-reproducibly; confirmed by running the oracle 5x on
+   an identical input and getting 2 different results. Root-caused via fuzzing,
+   not from the original author's notes — see
+   `goldens/known_divergences/README.md`'s `radial_wide_branch_001` entry.
 3. **`randomSeed == 0`** — ELK treats it as `new Random()` (clock-seeded,
    unreproducible across Java runs); the port substitutes a fixed seed. Any
    non-zero seed is bit-exact (`JavaRandom` is a verified LCG replica).
