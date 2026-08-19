@@ -1,0 +1,27 @@
+[package]
+name = "elkrs"
+version = "0.1.1"
+edition = "2024"
+license = "Apache-2.0"
+description = "Native-Rust, byte-exact reimplementation of the Eclipse Layout Kernel (ELK) graph layout algorithms, with a CLI"
+authors = ["depetrol <depetrol03@gmail.com>"]
+repository = "https://github.com/depetrol/elkrs"
+homepage = "https://github.com/depetrol/elkrs"
+readme = "README.md"
+keywords = ["graph", "layout", "elk", "diagram", "layered"]
+categories = ["algorithms", "mathematics", "visualization"]
+# Development-only assets — kept out of the published crate.
+exclude = ["/goldens", "/oracle", "/tools", "/elk"]
+
+[lib]
+name = "elkrs"
+path = "src/lib.rs"
+
+[[bin]]
+name = "elkrs"
+path = "src/main.rs"
+
+[dependencies]
+indexmap = "2"
+serde = { version = "1", features = ["derive"] }
+serde_json = { version = "1", features = ["preserve_order", "float_roundtrip"] }
