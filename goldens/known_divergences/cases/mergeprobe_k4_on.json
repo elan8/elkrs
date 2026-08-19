@@ -1,0 +1,98 @@
+{
+  "id": "g",
+  "layoutOptions": {
+    "org.eclipse.elk.algorithm": "org.eclipse.elk.layered",
+    "org.eclipse.elk.hierarchyHandling": "INCLUDE_CHILDREN",
+    "org.eclipse.elk.layered.mergeHierarchyEdges": "true"
+  },
+  "children": [
+    {
+      "id": "a",
+      "width": 30,
+      "height": 30
+    },
+    {
+      "id": "compound",
+      "width": 10,
+      "height": 10,
+      "layoutOptions": {
+        "org.eclipse.elk.algorithm": "org.eclipse.elk.layered"
+      },
+      "children": [
+        {
+          "id": "c0",
+          "width": 30,
+          "height": 30
+        },
+        {
+          "id": "c1",
+          "width": 30,
+          "height": 30
+        },
+        {
+          "id": "c2",
+          "width": 30,
+          "height": 30
+        },
+        {
+          "id": "c3",
+          "width": 30,
+          "height": 30
+        }
+      ],
+      "edges": []
+    },
+    {
+      "id": "b",
+      "width": 30,
+      "height": 30
+    }
+  ],
+  "edges": [
+    {
+      "id": "e_out",
+      "sources": [
+        "compound"
+      ],
+      "targets": [
+        "b"
+      ]
+    },
+    {
+      "id": "e_in0",
+      "sources": [
+        "a"
+      ],
+      "targets": [
+        "c0"
+      ]
+    },
+    {
+      "id": "e_in1",
+      "sources": [
+        "a"
+      ],
+      "targets": [
+        "c1"
+      ]
+    },
+    {
+      "id": "e_in2",
+      "sources": [
+        "a"
+      ],
+      "targets": [
+        "c2"
+      ]
+    },
+    {
+      "id": "e_in3",
+      "sources": [
+        "a"
+      ],
+      "targets": [
+        "c3"
+      ]
+    }
+  ]
+}

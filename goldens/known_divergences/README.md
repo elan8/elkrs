@@ -28,21 +28,35 @@ compound_extport_k4_000: 22 diffs
 compound_extport_k5_000: 22 diffs
 ```
 
-This is likely **not** the identical trigger the README describes: "one
-boundary port feeding several children" implies a single merged port object
-(ELK's automatic port-merging for multiple edges sharing an endpoint), while
-this corpus uses `k` independent point-to-point edges with no explicit
-shared port — each edge gets its own auto-generated external-port dummy on
-import. Whether that's a distinct ordering non-determinism or a more
-broadly-triggerable version of the same root cause hasn't been determined;
-it would need a case built with ELK's actual merged-port encoding (a single
-edge/port object with multiple `sources`/`targets`) to compare apples to
-apples with the README's claim. Flagging as open rather than asserting
-either way.
+**Resolved:** this is the same construction the README describes, confirmed
+two ways (`tools/` probes, not checked in — see below to reproduce):
 
-General takeaway either way: sibling ordering of children fed by a shared
-external (cross-hierarchy) source is not guaranteed to match the oracle in
-this port, for `k` as low as 2 in the shape tested here.
+1. `org.eclipse.elk.layered.mergeHierarchyEdges` (default `true`, the option
+   in `src/alg_layered/compound.rs` that governs whether same-side
+   hierarchy-crossing edges share one external-port dummy) was toggled
+   `true`/`false` on the same k=2..5 shapes. The real oracle's own output
+   was **byte-identical either way** — the single/merged external port is
+   what this shape produces regardless of the flag, not an artifact of a
+   "wrong" encoding.
+2. The other literal reading — a true ELK hyperedge (one edge object with
+   multiple `targets`) — is rejected outright by real ELK's `layered`
+   algorithm (`UnsupportedGraphException: Hyperedges are not supported.`),
+   and `elkrs` reproduces that exact error message byte-for-byte. So a
+   hyperedge isn't a valid alternate construction to test against.
+
+So the k-separate-edges shape *is* "one boundary port feeding several
+children of one compound node," and the divergence is real starting at
+**k=2**, not k≥4 as documented. The README's threshold claim appears to be
+inaccurate (or was based on a narrower case than tested here) — worth a
+correction upstream if this is ever republished, and worth keeping in mind
+for anyone relying on this port for compound-node layouts with ≥2 children
+sharing an external connection.
+
+The probe cases themselves are checked in: `cases/mergeprobe_k{2,3,4,5}_{on,off}.json`
+and their oracle output in `expected/`. Diff `expected/mergeprobe_k2_on.json`
+against `expected/mergeprobe_k2_off.json` directly (e.g. with
+`tools/compare_layouts.py`) to confirm the oracle's own output doesn't
+change with the flag.
 
 ## What passed
 

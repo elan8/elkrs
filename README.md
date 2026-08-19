@@ -110,10 +110,13 @@ byte-exact. They are recorded so future cases are chosen with the caveats in min
 > of the original author's fixtures. 300 general random fuzz cases plus 42 of
 > 60 curated cases came back bit-identical, independently reproducing the
 > `labels_up` divergence below exactly as documented. The external-port
-> ordering divergence below, however, reproduced starting at k=2 rather than
-> k≥4 in our reconstruction — see [`goldens/known_divergences/README.md`](goldens/known_divergences/README.md)
-> for why that likely isn't an apples-to-apples comparison (different edge
-> encoding), and for what it means either way.
+> ordering divergence below, however, reproduces starting at **k=2**, not
+> k≥4 as documented — confirmed to be the same construction (not a
+> different/looser encoding) by toggling `mergeHierarchyEdges` with no
+> effect on the oracle's own output, and by ruling out true ELK hyperedges
+> (rejected outright by real ELK). See
+> [`goldens/known_divergences/README.md`](goldens/known_divergences/README.md)
+> for the full writeup; the k≥4 threshold below appears to be inaccurate.
 
 1. **Transcendental ULP** — `Math.sin/cos/log` are not correctly-rounded by the
    JVM or any libm; HotSpot's intrinsics differ from Apple libm/musl by ≤1 ULP on
