@@ -1,0 +1,122 @@
+{
+  "id": "g",
+  "layoutOptions": {
+    "org.eclipse.elk.algorithm": "org.eclipse.elk.layered",
+    "org.eclipse.elk.direction": "UP"
+  },
+  "children": [
+    {
+      "id": "n0",
+      "width": 30,
+      "height": 30,
+      "labels": [
+        {
+          "text": "node0",
+          "width": 40,
+          "height": 12
+        }
+      ],
+      "layoutOptions": {
+        "org.eclipse.elk.nodeLabels.placement": "H_CENTER V_CENTER"
+      }
+    },
+    {
+      "id": "n1",
+      "width": 30,
+      "height": 30,
+      "labels": [
+        {
+          "text": "node1",
+          "width": 40,
+          "height": 12
+        }
+      ],
+      "layoutOptions": {
+        "org.eclipse.elk.nodeLabels.placement": "H_CENTER V_CENTER"
+      }
+    },
+    {
+      "id": "n2",
+      "width": 30,
+      "height": 30,
+      "labels": [
+        {
+          "text": "node2",
+          "width": 40,
+          "height": 12
+        }
+      ],
+      "layoutOptions": {
+        "org.eclipse.elk.nodeLabels.placement": "H_CENTER V_CENTER"
+      }
+    },
+    {
+      "id": "n3",
+      "width": 30,
+      "height": 30,
+      "labels": [
+        {
+          "text": "node3",
+          "width": 40,
+          "height": 12
+        }
+      ],
+      "layoutOptions": {
+        "org.eclipse.elk.nodeLabels.placement": "H_CENTER V_CENTER"
+      }
+    },
+    {
+      "id": "n4",
+      "width": 30,
+      "height": 30,
+      "labels": [
+        {
+          "text": "node4",
+          "width": 40,
+          "height": 12
+        }
+      ],
+      "layoutOptions": {
+        "org.eclipse.elk.nodeLabels.placement": "H_CENTER V_CENTER"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "e0",
+      "sources": [
+        "n0"
+      ],
+      "targets": [
+        "n1"
+      ]
+    },
+    {
+      "id": "e1",
+      "sources": [
+        "n1"
+      ],
+      "targets": [
+        "n2"
+      ]
+    },
+    {
+      "id": "e2",
+      "sources": [
+        "n2"
+      ],
+      "targets": [
+        "n3"
+      ]
+    },
+    {
+      "id": "e3",
+      "sources": [
+        "n3"
+      ],
+      "targets": [
+        "n4"
+      ]
+    }
+  ]
+}

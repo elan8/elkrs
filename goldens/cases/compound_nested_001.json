@@ -1,0 +1,107 @@
+{
+  "id": "g",
+  "layoutOptions": {
+    "org.eclipse.elk.algorithm": "org.eclipse.elk.layered",
+    "org.eclipse.elk.hierarchyHandling": "INCLUDE_CHILDREN"
+  },
+  "children": [
+    {
+      "id": "o0",
+      "width": 30,
+      "height": 30
+    },
+    {
+      "id": "o1",
+      "width": 30,
+      "height": 30
+    },
+    {
+      "id": "compound",
+      "width": 10,
+      "height": 10,
+      "layoutOptions": {
+        "org.eclipse.elk.algorithm": "org.eclipse.elk.layered"
+      },
+      "children": [
+        {
+          "id": "i0",
+          "width": 30,
+          "height": 30
+        },
+        {
+          "id": "i1",
+          "width": 30,
+          "height": 30
+        },
+        {
+          "id": "i2",
+          "width": 30,
+          "height": 30
+        },
+        {
+          "id": "i3",
+          "width": 30,
+          "height": 30
+        }
+      ],
+      "edges": [
+        {
+          "id": "ie0",
+          "sources": [
+            "i0"
+          ],
+          "targets": [
+            "i1"
+          ]
+        },
+        {
+          "id": "ie1",
+          "sources": [
+            "i1"
+          ],
+          "targets": [
+            "i2"
+          ]
+        },
+        {
+          "id": "ie2",
+          "sources": [
+            "i2"
+          ],
+          "targets": [
+            "i3"
+          ]
+        }
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "id": "oe0",
+      "sources": [
+        "o0"
+      ],
+      "targets": [
+        "o1"
+      ]
+    },
+    {
+      "id": "oe_link",
+      "sources": [
+        "o1"
+      ],
+      "targets": [
+        "compound"
+      ]
+    },
+    {
+      "id": "oe_into",
+      "sources": [
+        "o0"
+      ],
+      "targets": [
+        "i0"
+      ]
+    }
+  ]
+}

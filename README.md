@@ -103,6 +103,18 @@ python3 tools/compare_layouts.py oracle.json rust.json      # exact numeric diff
 The golden corpus avoids inputs that trigger these, so the golden suite is
 byte-exact. They are recorded so future cases are chosen with the caveats in mind.
 
+> **Re-verification note:** `oracle/`, `tools/`, and `goldens/` in this repo
+> were rebuilt from scratch after the original ones were lost (see the
+> provenance note above) — a fresh Java oracle against real ELK 0.11.0, a
+> random graph generator, and a differential fuzzer, none of which reuse any
+> of the original author's fixtures. 300 general random fuzz cases plus 42 of
+> 60 curated cases came back bit-identical, independently reproducing the
+> `labels_up` divergence below exactly as documented. The external-port
+> ordering divergence below, however, reproduced starting at k=2 rather than
+> k≥4 in our reconstruction — see [`goldens/known_divergences/README.md`](goldens/known_divergences/README.md)
+> for why that likely isn't an apples-to-apples comparison (different edge
+> encoding), and for what it means either way.
+
 1. **Transcendental ULP** — `Math.sin/cos/log` are not correctly-rounded by the
    JVM or any libm; HotSpot's intrinsics differ from Apple libm/musl by ≤1 ULP on
    a minority of inputs. Affects coordinates fed by trig (radial placement, Eades
