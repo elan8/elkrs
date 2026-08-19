@@ -13,50 +13,38 @@ Matches the main README's documented divergence exactly: geometry
 case; the *only* diff is the echoed `org.eclipse.elk.nodeLabels.placement`
 option, which flips `V_TOP`↔`V_BOTTOM`. Cosmetic, as documented.
 
-## `compound_extport_k{2,3,4,5}_*` — external-port child ordering
+## FIXED: external-port child ordering (was `compound_extport_k{2,3,4,5}_*`)
 
-The main README documents this as affecting **k≥4** interior children only
-("k=2,3 exact; k=4 oracle `c3,c1,c2,c4` vs port `c3,c4,c1,c2`"). Our
-reconstruction — `k` separate edges from an outer node directly into `k`
-children of an `INCLUDE_CHILDREN` compound node — diverges starting at
-**k=2**, not k=4:
+Previously documented here (and in the main README, item 6) as diverging
+starting at **k=2** rather than the documented k≥4 — this has since been
+**root-caused and fixed**, and the `compound_extport_k{2,3,4,5}_*` /
+`mergeprobe_k{2,3,4,5}_{on,off}` cases now live in `goldens/cases/` (all
+passing) rather than here.
 
-```
-compound_extport_k2_000: 8 diffs   (children[0]/children[1] y swapped)
-compound_extport_k3_000: 15 diffs
-compound_extport_k4_000: 22 diffs
-compound_extport_k5_000: 22 diffs
-```
+Root cause: `elkrs` threaded a single `JavaRandom` through the entire
+hierarchy (`elk_layered.rs`'s `hierarchical_layout`, comment: "Random number
+generator is created from the root graph"). Real ELK constructs a
+**separate, independently-seeded `Random`** per `LGraph` — one per
+hierarchy level, via `GraphConfigurator` — and a compound node's nested
+graph draws from its own, not the outer graph's already-perturbed one
+(`GraphInfoHolder.java:89`, `Random random = lGraph.getProperty(RANDOM)`).
+Confirmed via a call-counting `Random` subclass and object-identity
+inspection on real ELK: the outer graph's and the nested graph's barycenter
+computations ran against two different `Random` object instances. Fixed by
+giving `GraphInfoHolder` its own `random: JavaRandom` field (constructed the
+same way `GraphConfigurator` does) and using it — instead of the
+outer-threaded generator — from `sweep_in_hierarchical_node` onward,
+including for the `SweepPortDistributor::create` `nextBoolean()` draw made
+during that graph's own `GraphInfoHolder::new` (the detail that made the
+first attempt at this fix still not match: that draw was still coming from
+the wrong generator). See `src/alg_layered/p3order/graph_info_holder.rs`
+and `layer_sweep.rs::sweep_in_hierarchical_node` for the fix itself.
 
-**Resolved:** this is the same construction the README describes, confirmed
-two ways (`tools/` probes, not checked in — see below to reproduce):
-
-1. `org.eclipse.elk.layered.mergeHierarchyEdges` (default `true`, the option
-   in `src/alg_layered/compound.rs` that governs whether same-side
-   hierarchy-crossing edges share one external-port dummy) was toggled
-   `true`/`false` on the same k=2..5 shapes. The real oracle's own output
-   was **byte-identical either way** — the single/merged external port is
-   what this shape produces regardless of the flag, not an artifact of a
-   "wrong" encoding.
-2. The other literal reading — a true ELK hyperedge (one edge object with
-   multiple `targets`) — is rejected outright by real ELK's `layered`
-   algorithm (`UnsupportedGraphException: Hyperedges are not supported.`),
-   and `elkrs` reproduces that exact error message byte-for-byte. So a
-   hyperedge isn't a valid alternate construction to test against.
-
-So the k-separate-edges shape *is* "one boundary port feeding several
-children of one compound node," and the divergence is real starting at
-**k=2**, not k≥4 as documented. The README's threshold claim appears to be
-inaccurate (or was based on a narrower case than tested here) — worth a
-correction upstream if this is ever republished, and worth keeping in mind
-for anyone relying on this port for compound-node layouts with ≥2 children
-sharing an external connection.
-
-The probe cases themselves are checked in: `cases/mergeprobe_k{2,3,4,5}_{on,off}.json`
-and their oracle output in `expected/`. Diff `expected/mergeprobe_k2_on.json`
-against `expected/mergeprobe_k2_off.json` directly (e.g. with
-`tools/compare_layouts.py`) to confirm the oracle's own output doesn't
-change with the flag.
+Verified: all 20 previously-diverging cases now match the oracle exactly;
+400 fuzz cases targeting `layered` and 200 targeting all 12 algorithms came
+back with no new divergences (only the pre-existing `labels_up` cosmetic
+one); the full `cargo test` suite (205 tests) and golden suite (154 cases)
+pass.
 
 ## `radial_{002,003,004,006}` — transcendental ULP
 
@@ -132,8 +120,10 @@ list just didn't have a `radial` instance yet. Repro:
 
 300 general-purpose random DAG fuzz cases (`tools/fuzz_diff.py`, seed 100 —
 varying node/edge count, cycles, crossings, `direction`, `edgeRouting`,
-`spacing.nodeNode`) and 134 of the 138 curated `goldens/cases/` — covering
-all 12 algorithms elkrs implements — came back bit-identical. See
+`spacing.nodeNode`), a further 600 fuzz cases (seeds 12345/777, targeting
+`layered` and all 12 algorithms respectively, run after the external-port
+fix above), and 154 of the 165 curated `goldens/cases/` — covering all 12
+algorithms elkrs implements — came back bit-identical. See
 `oracle/README.md` for the algorithm-specific input gotchas (seeded
 `random`, positioned `spore`, disconnected `disco`, tree-shaped
 `radial`/`mrtree`) this corpus accounts for.

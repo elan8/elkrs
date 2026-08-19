@@ -64,6 +64,34 @@ pub struct GraphInfoHolder {
     pub cross_minimizer: CrossMinimizer,
     pub port_distributor: SweepPortDistributor,
     pub crossings_counter: AllCrossingsCounter,
+
+    /// This graph's own `RANDOM` property (`lGraph.getProperty(RANDOM)` in
+    /// Java) — every LGraph in the hierarchy gets an independently
+    /// constructed random number generator via its own GraphConfigurator
+    /// pass, not a single generator shared/threaded through the whole
+    /// hierarchy. For a nested graph, this is that dedicated generator,
+    /// already advanced by whatever this constructor itself drew from it
+    /// (`SweepPortDistributor::create`'s `nextBoolean()`); used from then on
+    /// whenever "sweeping into" this graph (`sweep_in_hierarchical_node`).
+    /// The root's own copy here is unused and never advanced, since
+    /// root-level processing keeps using the generator threaded down from
+    /// `elk_layered::hierarchical_layout` instead (the same underlying LGraph
+    /// property in Java, so this is equivalent, not a divergence).
+    pub random: JavaRandom,
+}
+
+/// `GraphConfigurator`'s per-graph random construction
+/// (`lgraph.setProperty(RANDOM, randomSeed == 0 ? new Random() : new
+/// Random(randomSeed))`), duplicated here rather than shared with
+/// `elk_layered::make_random` to keep this module's dependency on that one
+/// private helper from leaking across the crate.
+fn make_random_for_graph(a: &LGraphArena, graph: LGraphId) -> JavaRandom {
+    let random_seed: i32 = a.graph(graph).properties.get(&lopts::RANDOM_SEED);
+    if random_seed == 0 {
+        JavaRandom::new(1) // time-based seed would not be reproducible
+    } else {
+        JavaRandom::new(random_seed as i64)
+    }
 }
 
 impl GraphInfoHolder {
@@ -95,8 +123,21 @@ impl GraphInfoHolder {
 
         // Init all objects needing initialization by graph traversal.
         let mut crossings_counter = AllCrossingsCounter::new(num_layers);
-        // (the RANDOM graph property is the `random` parameter here)
-        let mut port_distributor = SweepPortDistributor::create(cross_min_type, random, num_layers);
+        // `lGraph.getProperty(RANDOM)` in Java: every graph has its own,
+        // independently-constructed random generator (see `random` field
+        // doc below). For the root graph this is the same generator as the
+        // `random` parameter threaded in from `elk_layered::hierarchical_layout`
+        // (same underlying LGraph property in Java, so using the parameter
+        // directly here is equivalent and keeps the root's already-verified
+        // behavior unchanged); for a nested graph it must be its own fresh
+        // one, not the root's, since `SweepPortDistributor::create` below
+        // draws from it (`nextBoolean()`) before this graph's own barycenter
+        // computations get a turn.
+        let mut own_random = make_random_for_graph(a, graph);
+        let port_distributor_random: &mut JavaRandom =
+            if has_parent { &mut own_random } else { random };
+        let mut port_distributor =
+            SweepPortDistributor::create(cross_min_type, port_distributor_random, num_layers);
         let mut decider = LayerSweepTypeDecider::new(num_layers);
 
         let mut cross_minimizer = match cross_min_type {
@@ -229,6 +270,7 @@ impl GraphInfoHolder {
             cross_minimizer,
             port_distributor,
             crossings_counter,
+            random: own_random,
         })
     }
 

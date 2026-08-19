@@ -107,27 +107,21 @@ byte-exact. They are recorded so future cases are chosen with the caveats in min
 > were rebuilt from scratch after the original ones were lost (see the
 > provenance note above) — a fresh Java oracle against real ELK 0.11.0, a
 > random graph generator, and a differential fuzzer, none of which reuse any
-> of the original author's fixtures. 300 general random fuzz cases plus 42 of
-> 60 curated cases came back bit-identical, independently reproducing the
-> `labels_up` divergence below exactly as documented. The external-port
-> ordering divergence below, however, reproduces starting at **k=2**, not
-> k≥4 as documented — confirmed to be the same construction (not a
-> different/looser encoding) by toggling `mergeHierarchyEdges` with no
-> effect on the oracle's own output, and by ruling out true ELK hyperedges
-> (rejected outright by real ELK). See
-> [`goldens/known_divergences/README.md`](goldens/known_divergences/README.md)
-> for the full writeup; the k≥4 threshold below appears to be inaccurate.
-> Coverage now spans all 12 algorithms (134 of 138 cases bit-identical); the
-> oracle's `pom.xml` and per-algorithm input gotchas are in
-> `oracle/README.md`. Fuzzing `radial` beyond the curated corpus surfaced a
-> non-cosmetic divergence — up to ~42 units off, not 1 ULP — on trees with
-> wide branching. Root-caused: it's real ELK's own oracle that's
-> non-reproducible (confirmed by running it 5x on one input and getting 2
-> different results), traced to a `HashSet<ElkNode>` iterated by identity
-> hash in `RadiusExtensionOverlapRemoval` feeding a tie-sensitive sort — the
-> same class of divergence as item 2 below, just an instance that wasn't
-> previously catalogued. See `goldens/known_divergences/README.md`'s
-> `radial_wide_branch_001` entry for the full trace.
+> of the original author's fixtures. Coverage spans all 12 algorithms; 154 of
+> 165 curated `goldens/cases/` plus 900 fuzz cases across several rounds came
+> back bit-identical. The external-port ordering item below ("compound
+> layered, two narrow cases") was found to actually diverge starting at
+> **k=2**, not the documented k≥4 — root-caused to a real elkrs bug (not a
+> Java quirk) and **fixed**: `elkrs` was threading one `JavaRandom` through
+> the whole hierarchy, where real ELK constructs an independently-seeded
+> `Random` per graph in the hierarchy. See
+> [`goldens/known_divergences/README.md`](goldens/known_divergences/README.md)'s
+> "FIXED" entry for the full trace and fix. Fuzzing `radial` beyond the
+> curated corpus separately surfaced a non-cosmetic divergence — up to ~42
+> units off, not 1 ULP — on trees with wide branching; root-caused as item 2
+> below (real ELK's own oracle is non-reproducible for that input, not an
+> elkrs bug). Per-algorithm input gotchas this corpus accounts for are in
+> `oracle/README.md`.
 
 1. **Transcendental ULP** — `Math.sin/cos/log` are not correctly-rounded by the
    JVM or any libm; HotSpot's intrinsics differ from Apple libm/musl by ≤1 ULP on
@@ -164,16 +158,22 @@ byte-exact. They are recorded so future cases are chosen with the caveats in min
    and the `ComponentGroupGraphPlacer` path are byte-exact (see the
    `layered_xhier_*`/`layered_extport_*`/`layered_extcomp_*` goldens and ELK's
    `Issue680Test`). Remaining:
-   - *Merged external port → ≥4 interior nodes* (one boundary port feeding several
-     children of one compound node): the children's vertical order can differ
-     (k=2,3 exact; k=4 oracle `c3,c1,c2,c4` vs port `c3,c4,c1,c2`). **Deterministic**
-     (seed-independent — *not* a `JavaRandom` desync). Root cause: in the
-     hierarchical sweep the oracle orders that layer via the `preOrdered`
-     barycenter-fill path while the port reaches the `randomize` first-layer path;
-     both `BarycenterHeuristic` ports are byte-faithful in isolation. Pinpointing
-     the branch needs a Java-side sweep trace; the shared path touches all
-     `INCLUDE_CHILDREN` goldens, so a blind change risks regressions. Never hit by
-     the (flat-graph) fuzzer.
+   - ~~*Merged external port → ≥4 interior nodes*~~ **FIXED.** This was
+     mischaracterized above: it wasn't k≥4-only (it started at k=2), and it
+     *was* a `JavaRandom` desync, just not the kind a same-seed check would
+     catch. `elkrs` threaded one `JavaRandom` through the entire hierarchy
+     (`elk_layered.rs`); real ELK constructs an independently-seeded
+     `Random` per graph in the hierarchy (`GraphConfigurator`, one per
+     `LGraph`), so a compound node's nested graph draws from its own
+     generator, not the outer graph's already-perturbed one. Confirmed via a
+     call-counting `Random` subclass and object-identity inspection against
+     real ELK, then fixed by giving `GraphInfoHolder` its own `random` field
+     (`src/alg_layered/p3order/graph_info_holder.rs`,
+     `layer_sweep.rs::sweep_in_hierarchical_node`). All 20 previously-failing
+     cases now match exactly; 900 fuzz cases across several rounds post-fix
+     found no regressions. See
+     [`goldens/known_divergences/README.md`](goldens/known_divergences/README.md)'s
+     "FIXED" entry for the full trace.
    - *`nodeLabels.placement` echo under `direction=UP`* — **cosmetic**: the
      *geometry* is byte-identical (ELK's `Issue682Test` passes), only the echoed
      placement option flips `V_TOP`→`V_BOTTOM`. RIGHT/DOWN/LEFT fully exact.

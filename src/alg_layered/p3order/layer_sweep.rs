@@ -486,7 +486,7 @@ fn sweep_reducing_crossings(
         )
     };
     let first_layer = sweep.holders[gidx].current_node_order[first_index(forward, length)].clone();
-    improved |= sweep_in_hierarchical_nodes(sweep, a, random, &first_layer, forward, first_sweep)?;
+    improved |= sweep_in_hierarchical_nodes(sweep, a, &first_layer, forward, first_sweep)?;
     let mut i = first_free(forward, length);
     while is_not_end(length, i, forward) {
         let first_try: bool =
@@ -525,7 +525,7 @@ fn sweep_reducing_crossings(
             );
         }
         let layer = sweep.holders[gidx].current_node_order[i as usize].clone();
-        improved |= sweep_in_hierarchical_nodes(sweep, a, random, &layer, forward, first_sweep)?;
+        improved |= sweep_in_hierarchical_nodes(sweep, a, &layer, forward, first_sweep)?;
         i += next(forward);
     }
 
@@ -538,7 +538,6 @@ fn sweep_reducing_crossings(
 fn sweep_in_hierarchical_nodes(
     sweep: &mut LayerSweep,
     a: &mut LGraphArena,
-    random: &mut JavaRandom,
     layer: &[LNodeId],
     is_forward_sweep: bool,
     is_first_sweep: bool,
@@ -551,7 +550,6 @@ fn sweep_in_hierarchical_nodes(
                 improved |= sweep_in_hierarchical_node(
                     sweep,
                     a,
-                    random,
                     node,
                     is_forward_sweep,
                     is_first_sweep,
@@ -565,7 +563,6 @@ fn sweep_in_hierarchical_nodes(
 fn sweep_in_hierarchical_node(
     sweep: &mut LayerSweep,
     a: &mut LGraphArena,
-    random: &mut JavaRandom,
     node: LNodeId,
     is_forward_sweep: bool,
     is_first_sweep: bool,
@@ -581,11 +578,30 @@ fn sweep_in_hierarchical_node(
         let layer_close = sweep.holders[child_idx].current_node_order[start_index].clone();
         let sorted = sort_port_dummies_by_port_positions(a, node, &layer_close, side);
         sweep.holders[child_idx].current_node_order[start_index] = sorted;
-    } else {
-        set_first_layer_order(sweep, a, random, child_idx, is_forward_sweep)?;
     }
 
-    let improved = sweep_reducing_crossings(sweep, a, random, child_idx, is_forward_sweep, is_first_sweep)?;
+    // The nested graph gets its own independently-seeded random generator
+    // (`GraphInfoHolder::random`, matching Java's `lGraph.getProperty(RANDOM)`
+    // per hierarchy level via GraphConfigurator) rather than continuing to
+    // draw from the outer graph's generator: real ELK constructs a separate
+    // `Random` per LGraph, so the nested graph's sequence must not depend on
+    // how much randomness the outer graph's own processing happened to
+    // consume first. Swapped out of the holder for the duration of the call
+    // (and back in afterward) to satisfy the borrow checker while `sweep` is
+    // also borrowed elsewhere in this function.
+    let mut nested_random = std::mem::replace(
+        &mut sweep.holders[child_idx].random,
+        JavaRandom::new(1),
+    );
+
+    if !is_external_port_dummy(a, first_node) {
+        set_first_layer_order(sweep, a, &mut nested_random, child_idx, is_forward_sweep)?;
+    }
+
+    let improved =
+        sweep_reducing_crossings(sweep, a, &mut nested_random, child_idx, is_forward_sweep, is_first_sweep)?;
+
+    sweep.holders[child_idx].random = nested_random;
 
     let parent = sweep.holders[child_idx].parent.unwrap();
     let order = sweep.holders[child_idx].current_node_order.clone();
