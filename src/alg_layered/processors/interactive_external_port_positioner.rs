@@ -102,6 +102,9 @@ pub fn process(a: &mut LGraphArena, graph: LGraphId) -> Result<(), String> {
 
 /// `funGetOtherNode`: when `target_node` is true, returns `e.getTarget().getNode()`
 /// (WEST case), otherwise `e.getSource().getNode()` (EAST case).
+// Only the first connected edge is used, mirroring the Java original's
+// single-match lookup; the loop always returns on its first iteration.
+#[allow(clippy::never_loop)]
 fn find_y_coordinate(a: &LGraphArena, dummy: LNodeId, target_node: bool) -> Option<f64> {
     for e in a.node_connected_edges(dummy) {
         let other = if target_node {

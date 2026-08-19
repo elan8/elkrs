@@ -226,7 +226,7 @@ fn compare_different_randomized_layouts(
         .get(&lopts::CONSIDER_MODEL_ORDER_CROSSING_COUNTER_NODE_INFLUENCE);
     // CROSSING_COUNTER_NODE_INFLUENCE is checked twice (instead of the port
     // influence).
-    #[allow(clippy::nonminimal_bool)]
+    #[allow(clippy::nonminimal_bool, clippy::eq_op)]
     if node_influence != 0.0 || node_influence != 0.0 {
         let mut best_crossings = f64::MAX;
         if a.graph(lgraph).properties.get(&lopts::CONSIDER_MODEL_ORDER_STRATEGY)

@@ -12,6 +12,16 @@ the reference implementation, verified against the ELK 0.11.0 release jars.
 (118 are faithful ports of ELK's own JUnit suite). Known residual divergences
 are enumerated at the end of this file.
 
+> **Provenance:** the original repository (`depetrol/elkrs` on GitHub) is no
+> longer available. This repository's history starts from a recovery of the
+> published [`elkrs` 0.1.1 crate](https://crates.io/crates/elkrs) on
+> crates.io (sha256 `a0aa6d17007599c4bb42b342b55148832289bc8c7e41d83f01b19af1ef363de4`),
+> which ships only the crate's own `src/` and `tests/`. The `oracle/`,
+> `tools/`, and `goldens/` trees referenced below as the basis for the fidelity
+> claims above were excluded from the published crate and are not recoverable
+> — see [Layout](#layout) for what that means for verifying this repo's own
+> claims.
+
 ## Layout
 
 A single crate, `elkrs`, with one module per mirrored ELK plugin under `src/`:

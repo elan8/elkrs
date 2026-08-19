@@ -96,6 +96,7 @@ impl EadesRadial {
         // quirk preserved: `currentRadius / currentRadius + radius`
         // (NaN for the root, acos(1 + radius) = NaN for radius > 0), so the
         // else branch below is effectively always taken.
+        #[allow(clippy::eq_op)]
         let tau = 2.0 * (current_radius / current_radius + self.radius).acos();
         let s;
         let mut alpha;
