@@ -1,0 +1,192 @@
+{
+  "id": "g",
+  "children": [
+    {
+      "id": "c0_0",
+      "x": 63.19953925926374,
+      "y": 60.16562714286146,
+      "width": 30.0,
+      "height": 30.0
+    },
+    {
+      "id": "c0_1",
+      "x": 63.19953925926374,
+      "y": 60.16562714286146,
+      "width": 30.0,
+      "height": 30.0
+    },
+    {
+      "id": "c0_2",
+      "x": 63.19953925926374,
+      "y": 60.16562714286146,
+      "width": 30.0,
+      "height": 30.0
+    },
+    {
+      "id": "c0_3",
+      "x": 63.19953925926374,
+      "y": 60.16562714286146,
+      "width": 30.0,
+      "height": 30.0
+    },
+    {
+      "id": "c0_4",
+      "x": 63.19953925926374,
+      "y": 60.16562714286146,
+      "width": 30.0,
+      "height": 30.0
+    },
+    {
+      "id": "c1_0",
+      "x": 13.089121164022764,
+      "y": 10.055209047620487,
+      "width": 30.0,
+      "height": 30.0
+    },
+    {
+      "id": "c1_1",
+      "x": 13.089121164022764,
+      "y": 10.055209047620487,
+      "width": 30.0,
+      "height": 30.0
+    }
+  ],
+  "layoutOptions": {
+    "org.eclipse.elk.resolvedAlgorithm": "Layout Algorithm: org.eclipse.elk.disco",
+    "org.eclipse.elk.disco.debug.discoGraph": "org.eclipse.elk.alg.disco.graph.DCGraph",
+    "org.eclipse.elk.disco.debug.discoPolys": "[ 0123456789\n0XXXXXXXXXX\n1XXXXXXXXXX\n2XXXXXXXXXX\n3XXXXXXXXXX\n4XXXXXXXXXX\n5XXXXXXXXXX\n6XXXXXXXXXX\n7XXXXXXXXXX\n8XXXXXXXXXX,  0123456789\n0XXXXXXXXXX\n1XXXXXXXXXX\n2XXXXXXXXXX\n3XXXXXXXXXX\n4XXXXXXXXXX\n5XXXXXXXXXX\n6XXXXXXXXXX\n7XXXXXXXXXX\n8XXXXXXXXXX]",
+    "org.eclipse.elk.algorithm": "org.eclipse.elk.disco",
+    "org.eclipse.elk.hierarchyHandling": "SEPARATE_CHILDREN"
+  },
+  "x": 0.0,
+  "y": 0.0,
+  "width": 129.7886604232865,
+  "height": 124.22083619048195,
+  "edges": [
+    {
+      "id": "c0_e1",
+      "sources": [
+        "c0_0"
+      ],
+      "targets": [
+        "c0_1"
+      ],
+      "sections": [
+        {
+          "id": "s0",
+          "startPoint": {
+            "x": 63.19953925926374,
+            "y": 60.16562714286146
+          },
+          "endPoint": {
+            "x": 63.19953925926374,
+            "y": 60.16562714286146
+          }
+        }
+      ],
+      "layoutOptions": {
+        "org.eclipse.elk.junctionPoints": "()"
+      }
+    },
+    {
+      "id": "c0_e2",
+      "sources": [
+        "c0_1"
+      ],
+      "targets": [
+        "c0_2"
+      ],
+      "sections": [
+        {
+          "id": "s1",
+          "startPoint": {
+            "x": 63.19953925926374,
+            "y": 60.16562714286146
+          },
+          "endPoint": {
+            "x": 63.19953925926374,
+            "y": 60.16562714286146
+          }
+        }
+      ],
+      "layoutOptions": {
+        "org.eclipse.elk.junctionPoints": "()"
+      }
+    },
+    {
+      "id": "c0_e3",
+      "sources": [
+        "c0_2"
+      ],
+      "targets": [
+        "c0_3"
+      ],
+      "sections": [
+        {
+          "id": "s2",
+          "startPoint": {
+            "x": 63.19953925926374,
+            "y": 60.16562714286146
+          },
+          "endPoint": {
+            "x": 63.19953925926374,
+            "y": 60.16562714286146
+          }
+        }
+      ],
+      "layoutOptions": {
+        "org.eclipse.elk.junctionPoints": "()"
+      }
+    },
+    {
+      "id": "c0_e4",
+      "sources": [
+        "c0_0"
+      ],
+      "targets": [
+        "c0_4"
+      ],
+      "sections": [
+        {
+          "id": "s3",
+          "startPoint": {
+            "x": 63.19953925926374,
+            "y": 60.16562714286146
+          },
+          "endPoint": {
+            "x": 63.19953925926374,
+            "y": 60.16562714286146
+          }
+        }
+      ],
+      "layoutOptions": {
+        "org.eclipse.elk.junctionPoints": "()"
+      }
+    },
+    {
+      "id": "c1_e1",
+      "sources": [
+        "c1_0"
+      ],
+      "targets": [
+        "c1_1"
+      ],
+      "sections": [
+        {
+          "id": "s4",
+          "startPoint": {
+            "x": 13.089121164022764,
+            "y": 10.055209047620487
+          },
+          "endPoint": {
+            "x": 13.089121164022764,
+            "y": 10.055209047620487
+          }
+        }
+      ],
+      "layoutOptions": {
+        "org.eclipse.elk.junctionPoints": "()"
+      }
+    }
+  ]
+}

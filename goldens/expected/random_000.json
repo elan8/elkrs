@@ -1,0 +1,111 @@
+{
+  "id": "g",
+  "children": [
+    {
+      "id": "n0",
+      "x": 71.03633417548198,
+      "y": 36.31390721770916,
+      "width": 30.0,
+      "height": 30.0
+    },
+    {
+      "id": "n1",
+      "x": 35.01895069268491,
+      "y": 22.441385443158744,
+      "width": 30.0,
+      "height": 30.0
+    },
+    {
+      "id": "n2",
+      "x": 79.07925757085941,
+      "y": 34.73761257239437,
+      "width": 30.0,
+      "height": 30.0
+    },
+    {
+      "id": "n3",
+      "x": 35.51270205879364,
+      "y": 37.42172773904447,
+      "width": 30.0,
+      "height": 30.0
+    }
+  ],
+  "layoutOptions": {
+    "org.eclipse.elk.nodeSize.constraints": "[]",
+    "org.eclipse.elk.randomSeed": "934954",
+    "org.eclipse.elk.resolvedAlgorithm": "Layout Algorithm: org.eclipse.elk.random",
+    "org.eclipse.elk.algorithm": "org.eclipse.elk.random",
+    "org.eclipse.elk.padding": "[top=15.0,left=15.0,bottom=15.0,right=15.0]",
+    "org.eclipse.elk.hierarchyHandling": "SEPARATE_CHILDREN"
+  },
+  "x": 0.0,
+  "y": 0.0,
+  "width": 211.78932994991945,
+  "height": 119.29270524462694,
+  "edges": [
+    {
+      "id": "e1",
+      "sources": [
+        "n1"
+      ],
+      "targets": [
+        "n2"
+      ],
+      "sections": [
+        {
+          "id": "s0",
+          "startPoint": {
+            "x": 65.01895069268491,
+            "y": 37.441385443158744
+          },
+          "endPoint": {
+            "x": 50.01895069268491,
+            "y": 52.441385443158744
+          },
+          "bendPoints": [
+            {
+              "x": 59.47325579645147,
+              "y": 41.73491557461967
+            },
+            {
+              "x": 53.90038326319408,
+              "y": 49.00728334502012
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "e2",
+      "sources": [
+        "n2"
+      ],
+      "targets": [
+        "n3"
+      ],
+      "sections": [
+        {
+          "id": "s1",
+          "startPoint": {
+            "x": 109.07925757085941,
+            "y": 49.73761257239437
+          },
+          "endPoint": {
+            "x": 94.07925757085941,
+            "y": 64.73761257239437
+          },
+          "bendPoints": [
+            {
+              "x": 104.39934889731569,
+              "y": 55.47815791558117
+            },
+            {
+              "x": 97.01058805115836,
+              "y": 57.753681990285486
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

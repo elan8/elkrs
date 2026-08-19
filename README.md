@@ -117,6 +117,13 @@ byte-exact. They are recorded so future cases are chosen with the caveats in min
 > (rejected outright by real ELK). See
 > [`goldens/known_divergences/README.md`](goldens/known_divergences/README.md)
 > for the full writeup; the k≥4 threshold below appears to be inaccurate.
+> Coverage now spans all 12 algorithms (134 of 138 cases bit-identical); the
+> oracle's `pom.xml` and per-algorithm input gotchas are in
+> `oracle/README.md`. Fuzzing `radial` beyond the curated corpus surfaced a
+> **new, unresolved, non-cosmetic** divergence — up to ~42 units off, not 1
+> ULP — on an 18-node tree with a 5-way branch; see
+> `goldens/known_divergences/README.md`'s `radial_wide_branch_001` entry.
+> Not yet root-caused.
 
 1. **Transcendental ULP** — `Math.sin/cos/log` are not correctly-rounded by the
    JVM or any libm; HotSpot's intrinsics differ from Apple libm/musl by ≤1 ULP on

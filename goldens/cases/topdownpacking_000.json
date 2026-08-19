@@ -1,0 +1,74 @@
+{
+  "id": "g",
+  "layoutOptions": {
+    "org.eclipse.elk.algorithm": "org.eclipse.elk.topdownpacking"
+  },
+  "children": [
+    {
+      "id": "n0",
+      "width": 30,
+      "height": 30
+    },
+    {
+      "id": "n1",
+      "width": 20,
+      "height": 40
+    },
+    {
+      "id": "n2",
+      "width": 20,
+      "height": 20
+    },
+    {
+      "id": "n3",
+      "width": 30,
+      "height": 40
+    },
+    {
+      "id": "n4",
+      "width": 20,
+      "height": 40
+    },
+    {
+      "id": "n5",
+      "width": 20,
+      "height": 40
+    },
+    {
+      "id": "n6",
+      "width": 20,
+      "height": 30
+    },
+    {
+      "id": "n7",
+      "width": 30,
+      "height": 20
+    },
+    {
+      "id": "n8",
+      "width": 30,
+      "height": 20
+    },
+    {
+      "id": "n9",
+      "width": 30,
+      "height": 40
+    },
+    {
+      "id": "n10",
+      "width": 30,
+      "height": 40
+    },
+    {
+      "id": "n11",
+      "width": 40,
+      "height": 30
+    },
+    {
+      "id": "n12",
+      "width": 40,
+      "height": 30
+    }
+  ],
+  "edges": []
+}

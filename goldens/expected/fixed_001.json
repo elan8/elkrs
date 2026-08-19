@@ -1,0 +1,87 @@
+{
+  "id": "g",
+  "children": [
+    {
+      "id": "n0",
+      "x": 0.0,
+      "y": 89.84180925677072,
+      "width": 30.0,
+      "height": 20.0
+    },
+    {
+      "id": "n1",
+      "x": 53.97018417824418,
+      "y": 31.931863275378024,
+      "width": 30.0,
+      "height": 30.0
+    },
+    {
+      "id": "n2",
+      "x": 95.91696772003523,
+      "y": 43.06275242151776,
+      "width": 30.0,
+      "height": 20.0
+    },
+    {
+      "id": "n3",
+      "x": 133.23561380453893,
+      "y": 19.3432753666928,
+      "width": 30.0,
+      "height": 40.0
+    },
+    {
+      "id": "n4",
+      "x": 174.84863548508926,
+      "y": 8.690088584619438,
+      "width": 30.0,
+      "height": 40.0
+    },
+    {
+      "id": "n5",
+      "x": 212.96928955641948,
+      "y": 184.45907440563198,
+      "width": 20.0,
+      "height": 40.0
+    }
+  ],
+  "layoutOptions": {
+    "org.eclipse.elk.nodeSize.constraints": "[]",
+    "org.eclipse.elk.resolvedAlgorithm": "Layout Algorithm: org.eclipse.elk.fixed",
+    "org.eclipse.elk.algorithm": "org.eclipse.elk.fixed",
+    "org.eclipse.elk.padding": "[top=15.0,left=15.0,bottom=15.0,right=15.0]",
+    "org.eclipse.elk.hierarchyHandling": "SEPARATE_CHILDREN"
+  },
+  "x": 0.0,
+  "y": 0.0,
+  "width": 262.9692895564195,
+  "height": 254.45907440563198,
+  "edges": [
+    {
+      "id": "e2",
+      "sources": [
+        "n2"
+      ],
+      "targets": [
+        "n3"
+      ]
+    },
+    {
+      "id": "e3",
+      "sources": [
+        "n3"
+      ],
+      "targets": [
+        "n4"
+      ]
+    },
+    {
+      "id": "e4",
+      "sources": [
+        "n4"
+      ],
+      "targets": [
+        "n5"
+      ]
+    }
+  ]
+}

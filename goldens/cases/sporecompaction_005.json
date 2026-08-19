@@ -1,0 +1,40 @@
+{
+  "id": "g",
+  "layoutOptions": {
+    "org.eclipse.elk.algorithm": "org.eclipse.elk.sporeCompaction"
+  },
+  "children": [
+    {
+      "id": "n0",
+      "width": 30,
+      "height": 30,
+      "x": 221.1459153983458,
+      "y": 365.5790678084516
+    },
+    {
+      "id": "n1",
+      "width": 30,
+      "height": 30,
+      "x": 296.26633124263077,
+      "y": 167.7477217451194
+    },
+    {
+      "id": "n2",
+      "width": 30,
+      "height": 30,
+      "x": 128.7208057888245,
+      "y": 166.50263940052614
+    }
+  ],
+  "edges": [
+    {
+      "id": "e1",
+      "sources": [
+        "n1"
+      ],
+      "targets": [
+        "n2"
+      ]
+    }
+  ]
+}

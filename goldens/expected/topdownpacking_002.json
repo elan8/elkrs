@@ -1,0 +1,85 @@
+{
+  "id": "g",
+  "children": [
+    {
+      "id": "n0",
+      "x": 12.0,
+      "y": 12.0,
+      "width": 150.0,
+      "height": 106.0820367751061
+    },
+    {
+      "id": "n1",
+      "x": 182.0,
+      "y": 12.000000000000014,
+      "width": 150.0,
+      "height": 106.0820367751061
+    },
+    {
+      "id": "n2",
+      "x": 352.0,
+      "y": 12.000000000000028,
+      "width": 150.0,
+      "height": 106.0820367751061
+    },
+    {
+      "id": "n3",
+      "x": 522.0,
+      "y": 12.000000000000043,
+      "width": 150.0,
+      "height": 106.0820367751061
+    },
+    {
+      "id": "n4",
+      "x": 12.0,
+      "y": 138.08203677510613,
+      "width": 150.0,
+      "height": 106.0820367751061
+    },
+    {
+      "id": "n5",
+      "x": 182.0,
+      "y": 138.08203677510613,
+      "width": 150.0,
+      "height": 106.0820367751061
+    },
+    {
+      "id": "n6",
+      "x": 352.0,
+      "y": 138.08203677510616,
+      "width": 150.0,
+      "height": 106.0820367751061
+    },
+    {
+      "id": "n7",
+      "x": 522.0,
+      "y": 138.0820367751062,
+      "width": 150.0,
+      "height": 106.0820367751061
+    },
+    {
+      "id": "n8",
+      "x": 12.0,
+      "y": 264.16407355021227,
+      "width": 320.0,
+      "height": 106.0820367751061
+    },
+    {
+      "id": "n9",
+      "x": 352.0,
+      "y": 264.16407355021227,
+      "width": 320.0,
+      "height": 106.0820367751061
+    }
+  ],
+  "layoutOptions": {
+    "org.eclipse.elk.resolvedAlgorithm": "Layout Algorithm: org.eclipse.elk.topdownpacking",
+    "org.eclipse.elk.algorithm": "org.eclipse.elk.topdownpacking",
+    "org.eclipse.elk.padding": "[top=12.0,left=12.0,bottom=12.0,right=12.0]",
+    "org.eclipse.elk.hierarchyHandling": "SEPARATE_CHILDREN"
+  },
+  "x": 0.0,
+  "y": 0.0,
+  "width": 684.0,
+  "height": 382.2461103253183
+}

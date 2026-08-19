@@ -1,0 +1,212 @@
+{
+  "id": "g",
+  "layoutOptions": {
+    "org.eclipse.elk.algorithm": "org.eclipse.elk.disco"
+  },
+  "children": [
+    {
+      "id": "c0_0",
+      "width": 30,
+      "height": 30
+    },
+    {
+      "id": "c0_1",
+      "width": 30,
+      "height": 30
+    },
+    {
+      "id": "c0_2",
+      "width": 30,
+      "height": 30
+    },
+    {
+      "id": "c0_3",
+      "width": 30,
+      "height": 30
+    },
+    {
+      "id": "c0_4",
+      "width": 30,
+      "height": 30
+    },
+    {
+      "id": "c1_0",
+      "width": 30,
+      "height": 30
+    },
+    {
+      "id": "c1_1",
+      "width": 30,
+      "height": 30
+    },
+    {
+      "id": "c1_2",
+      "width": 30,
+      "height": 30
+    },
+    {
+      "id": "c2_0",
+      "width": 30,
+      "height": 30
+    },
+    {
+      "id": "c2_1",
+      "width": 30,
+      "height": 30
+    },
+    {
+      "id": "c2_2",
+      "width": 30,
+      "height": 30
+    },
+    {
+      "id": "c2_3",
+      "width": 30,
+      "height": 30
+    },
+    {
+      "id": "c3_0",
+      "width": 30,
+      "height": 30
+    },
+    {
+      "id": "c3_1",
+      "width": 30,
+      "height": 30
+    },
+    {
+      "id": "c3_2",
+      "width": 30,
+      "height": 30
+    },
+    {
+      "id": "c3_3",
+      "width": 30,
+      "height": 30
+    },
+    {
+      "id": "c3_4",
+      "width": 30,
+      "height": 30
+    }
+  ],
+  "edges": [
+    {
+      "id": "c0_e1",
+      "sources": [
+        "c0_0"
+      ],
+      "targets": [
+        "c0_1"
+      ]
+    },
+    {
+      "id": "c0_e2",
+      "sources": [
+        "c0_0"
+      ],
+      "targets": [
+        "c0_2"
+      ]
+    },
+    {
+      "id": "c0_e3",
+      "sources": [
+        "c0_1"
+      ],
+      "targets": [
+        "c0_3"
+      ]
+    },
+    {
+      "id": "c0_e4",
+      "sources": [
+        "c0_1"
+      ],
+      "targets": [
+        "c0_4"
+      ]
+    },
+    {
+      "id": "c1_e1",
+      "sources": [
+        "c1_0"
+      ],
+      "targets": [
+        "c1_1"
+      ]
+    },
+    {
+      "id": "c1_e2",
+      "sources": [
+        "c1_1"
+      ],
+      "targets": [
+        "c1_2"
+      ]
+    },
+    {
+      "id": "c2_e1",
+      "sources": [
+        "c2_0"
+      ],
+      "targets": [
+        "c2_1"
+      ]
+    },
+    {
+      "id": "c2_e2",
+      "sources": [
+        "c2_1"
+      ],
+      "targets": [
+        "c2_2"
+      ]
+    },
+    {
+      "id": "c2_e3",
+      "sources": [
+        "c2_1"
+      ],
+      "targets": [
+        "c2_3"
+      ]
+    },
+    {
+      "id": "c3_e1",
+      "sources": [
+        "c3_0"
+      ],
+      "targets": [
+        "c3_1"
+      ]
+    },
+    {
+      "id": "c3_e2",
+      "sources": [
+        "c3_0"
+      ],
+      "targets": [
+        "c3_2"
+      ]
+    },
+    {
+      "id": "c3_e3",
+      "sources": [
+        "c3_0"
+      ],
+      "targets": [
+        "c3_3"
+      ]
+    },
+    {
+      "id": "c3_e4",
+      "sources": [
+        "c3_1"
+      ],
+      "targets": [
+        "c3_4"
+      ]
+    }
+  ]
+}

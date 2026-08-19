@@ -1,0 +1,99 @@
+{
+  "id": "g",
+  "layoutOptions": {
+    "org.eclipse.elk.algorithm": "org.eclipse.elk.rectpacking"
+  },
+  "children": [
+    {
+      "id": "n0",
+      "width": 20,
+      "height": 60
+    },
+    {
+      "id": "n1",
+      "width": 40,
+      "height": 30
+    },
+    {
+      "id": "n2",
+      "width": 40,
+      "height": 10
+    },
+    {
+      "id": "n3",
+      "width": 40,
+      "height": 40
+    },
+    {
+      "id": "n4",
+      "width": 30,
+      "height": 10
+    },
+    {
+      "id": "n5",
+      "width": 30,
+      "height": 10
+    },
+    {
+      "id": "n6",
+      "width": 10,
+      "height": 10
+    },
+    {
+      "id": "n7",
+      "width": 30,
+      "height": 10
+    },
+    {
+      "id": "n8",
+      "width": 20,
+      "height": 20
+    },
+    {
+      "id": "n9",
+      "width": 60,
+      "height": 20
+    },
+    {
+      "id": "n10",
+      "width": 60,
+      "height": 20
+    },
+    {
+      "id": "n11",
+      "width": 30,
+      "height": 60
+    },
+    {
+      "id": "n12",
+      "width": 40,
+      "height": 40
+    },
+    {
+      "id": "n13",
+      "width": 20,
+      "height": 40
+    },
+    {
+      "id": "n14",
+      "width": 20,
+      "height": 20
+    },
+    {
+      "id": "n15",
+      "width": 40,
+      "height": 40
+    },
+    {
+      "id": "n16",
+      "width": 10,
+      "height": 60
+    },
+    {
+      "id": "n17",
+      "width": 20,
+      "height": 40
+    }
+  ],
+  "edges": []
+}

@@ -1,0 +1,108 @@
+{
+  "id": "g",
+  "children": [
+    {
+      "id": "n0",
+      "x": 0.0,
+      "y": 70.85951331791077,
+      "width": 30.0,
+      "height": 30.0
+    },
+    {
+      "id": "n1",
+      "x": 56.59591870924008,
+      "y": 10.834237446434102,
+      "width": 40.0,
+      "height": 40.0
+    },
+    {
+      "id": "n2",
+      "x": 104.05636548803906,
+      "y": 80.52425642045375,
+      "width": 30.0,
+      "height": 20.0
+    },
+    {
+      "id": "n3",
+      "x": 145.2727738360462,
+      "y": 38.0417816881623,
+      "width": 30.0,
+      "height": 20.0
+    },
+    {
+      "id": "n4",
+      "x": 190.8198148319063,
+      "y": 55.7090289333881,
+      "width": 20.0,
+      "height": 20.0
+    },
+    {
+      "id": "n5",
+      "x": 226.89808345824275,
+      "y": 172.2698209523661,
+      "width": 40.0,
+      "height": 20.0
+    },
+    {
+      "id": "n6",
+      "x": 273.16279169636476,
+      "y": 199.85649368254533,
+      "width": 20.0,
+      "height": 20.0
+    },
+    {
+      "id": "n7",
+      "x": 321.32196627156793,
+      "y": 169.7391468828611,
+      "width": 20.0,
+      "height": 30.0
+    },
+    {
+      "id": "n8",
+      "x": 358.4629944078359,
+      "y": 42.749459839836334,
+      "width": 30.0,
+      "height": 20.0
+    }
+  ],
+  "layoutOptions": {
+    "org.eclipse.elk.nodeSize.constraints": "[]",
+    "org.eclipse.elk.resolvedAlgorithm": "Layout Algorithm: org.eclipse.elk.fixed",
+    "org.eclipse.elk.algorithm": "org.eclipse.elk.fixed",
+    "org.eclipse.elk.padding": "[top=15.0,left=15.0,bottom=15.0,right=15.0]",
+    "org.eclipse.elk.hierarchyHandling": "SEPARATE_CHILDREN"
+  },
+  "x": 0.0,
+  "y": 0.0,
+  "width": 418.4629944078359,
+  "height": 249.85649368254533,
+  "edges": [
+    {
+      "id": "e0",
+      "sources": [
+        "n0"
+      ],
+      "targets": [
+        "n1"
+      ]
+    },
+    {
+      "id": "e1",
+      "sources": [
+        "n1"
+      ],
+      "targets": [
+        "n2"
+      ]
+    },
+    {
+      "id": "e4",
+      "sources": [
+        "n4"
+      ],
+      "targets": [
+        "n5"
+      ]
+    }
+  ]
+}

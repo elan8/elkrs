@@ -1,0 +1,192 @@
+{
+  "id": "g",
+  "layoutOptions": {
+    "org.eclipse.elk.algorithm": "org.eclipse.elk.force",
+    "org.eclipse.elk.randomSeed": "423809"
+  },
+  "children": [
+    {
+      "id": "n8",
+      "width": 30,
+      "height": 30
+    },
+    {
+      "id": "n5",
+      "width": 30,
+      "height": 30
+    },
+    {
+      "id": "n9",
+      "width": 30,
+      "height": 30
+    },
+    {
+      "id": "n10",
+      "width": 30,
+      "height": 30
+    },
+    {
+      "id": "n2",
+      "width": 30,
+      "height": 30
+    },
+    {
+      "id": "n6",
+      "width": 30,
+      "height": 30
+    },
+    {
+      "id": "n3",
+      "width": 30,
+      "height": 30
+    },
+    {
+      "id": "n7",
+      "width": 30,
+      "height": 30
+    },
+    {
+      "id": "n4",
+      "width": 30,
+      "height": 30
+    },
+    {
+      "id": "n0",
+      "width": 30,
+      "height": 30
+    },
+    {
+      "id": "n1",
+      "width": 30,
+      "height": 30
+    }
+  ],
+  "edges": [
+    {
+      "id": "e0",
+      "sources": [
+        "n8"
+      ],
+      "targets": [
+        "n5"
+      ]
+    },
+    {
+      "id": "e1",
+      "sources": [
+        "n5"
+      ],
+      "targets": [
+        "n9"
+      ]
+    },
+    {
+      "id": "e2",
+      "sources": [
+        "n9"
+      ],
+      "targets": [
+        "n10"
+      ]
+    },
+    {
+      "id": "e3",
+      "sources": [
+        "n10"
+      ],
+      "targets": [
+        "n2"
+      ]
+    },
+    {
+      "id": "e4",
+      "sources": [
+        "n2"
+      ],
+      "targets": [
+        "n6"
+      ]
+    },
+    {
+      "id": "e5",
+      "sources": [
+        "n6"
+      ],
+      "targets": [
+        "n3"
+      ]
+    },
+    {
+      "id": "e6",
+      "sources": [
+        "n3"
+      ],
+      "targets": [
+        "n7"
+      ]
+    },
+    {
+      "id": "e7",
+      "sources": [
+        "n7"
+      ],
+      "targets": [
+        "n4"
+      ]
+    },
+    {
+      "id": "e8",
+      "sources": [
+        "n4"
+      ],
+      "targets": [
+        "n0"
+      ]
+    },
+    {
+      "id": "e9",
+      "sources": [
+        "n0"
+      ],
+      "targets": [
+        "n1"
+      ]
+    },
+    {
+      "id": "e10",
+      "sources": [
+        "n8"
+      ],
+      "targets": [
+        "n3"
+      ]
+    },
+    {
+      "id": "e11",
+      "sources": [
+        "n8"
+      ],
+      "targets": [
+        "n4"
+      ]
+    },
+    {
+      "id": "e12",
+      "sources": [
+        "n2"
+      ],
+      "targets": [
+        "n7"
+      ]
+    },
+    {
+      "id": "e13",
+      "sources": [
+        "n2"
+      ],
+      "targets": [
+        "n4"
+      ]
+    }
+  ]
+}

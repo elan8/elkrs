@@ -1,0 +1,71 @@
+{
+  "id": "g",
+  "layoutOptions": {
+    "org.eclipse.elk.algorithm": "org.eclipse.elk.radial"
+  },
+  "children": [
+    {
+      "id": "n0",
+      "width": 30,
+      "height": 30
+    },
+    {
+      "id": "n1",
+      "width": 30,
+      "height": 30
+    },
+    {
+      "id": "n2",
+      "width": 30,
+      "height": 30
+    },
+    {
+      "id": "n3",
+      "width": 30,
+      "height": 30
+    },
+    {
+      "id": "n4",
+      "width": 30,
+      "height": 30
+    }
+  ],
+  "edges": [
+    {
+      "id": "ne1",
+      "sources": [
+        "n0"
+      ],
+      "targets": [
+        "n1"
+      ]
+    },
+    {
+      "id": "ne2",
+      "sources": [
+        "n0"
+      ],
+      "targets": [
+        "n2"
+      ]
+    },
+    {
+      "id": "ne3",
+      "sources": [
+        "n0"
+      ],
+      "targets": [
+        "n3"
+      ]
+    },
+    {
+      "id": "ne4",
+      "sources": [
+        "n0"
+      ],
+      "targets": [
+        "n4"
+      ]
+    }
+  ]
+}

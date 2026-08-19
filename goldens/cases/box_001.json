@@ -1,0 +1,39 @@
+{
+  "id": "g",
+  "layoutOptions": {
+    "org.eclipse.elk.algorithm": "org.eclipse.elk.box"
+  },
+  "children": [
+    {
+      "id": "n0",
+      "width": 25,
+      "height": 15
+    },
+    {
+      "id": "n1",
+      "width": 35,
+      "height": 25
+    },
+    {
+      "id": "n2",
+      "width": 50,
+      "height": 25
+    },
+    {
+      "id": "n3",
+      "width": 15,
+      "height": 35
+    },
+    {
+      "id": "n4",
+      "width": 35,
+      "height": 15
+    },
+    {
+      "id": "n5",
+      "width": 35,
+      "height": 25
+    }
+  ],
+  "edges": []
+}

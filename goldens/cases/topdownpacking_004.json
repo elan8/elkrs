@@ -1,0 +1,29 @@
+{
+  "id": "g",
+  "layoutOptions": {
+    "org.eclipse.elk.algorithm": "org.eclipse.elk.topdownpacking"
+  },
+  "children": [
+    {
+      "id": "n0",
+      "width": 20,
+      "height": 30
+    },
+    {
+      "id": "n1",
+      "width": 20,
+      "height": 30
+    },
+    {
+      "id": "n2",
+      "width": 20,
+      "height": 40
+    },
+    {
+      "id": "n3",
+      "width": 30,
+      "height": 20
+    }
+  ],
+  "edges": []
+}

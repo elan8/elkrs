@@ -1,0 +1,90 @@
+{
+  "id": "g",
+  "layoutOptions": {
+    "org.eclipse.elk.algorithm": "org.eclipse.elk.mrtree"
+  },
+  "children": [
+    {
+      "id": "t0_0",
+      "width": 30,
+      "height": 30
+    },
+    {
+      "id": "t0_1",
+      "width": 30,
+      "height": 30
+    },
+    {
+      "id": "t0_2",
+      "width": 30,
+      "height": 30
+    },
+    {
+      "id": "t1_0",
+      "width": 30,
+      "height": 30
+    },
+    {
+      "id": "t1_1",
+      "width": 30,
+      "height": 30
+    },
+    {
+      "id": "t1_2",
+      "width": 30,
+      "height": 30
+    },
+    {
+      "id": "t1_3",
+      "width": 30,
+      "height": 30
+    }
+  ],
+  "edges": [
+    {
+      "id": "t0_e1",
+      "sources": [
+        "t0_0"
+      ],
+      "targets": [
+        "t0_1"
+      ]
+    },
+    {
+      "id": "t0_e2",
+      "sources": [
+        "t0_1"
+      ],
+      "targets": [
+        "t0_2"
+      ]
+    },
+    {
+      "id": "t1_e1",
+      "sources": [
+        "t1_0"
+      ],
+      "targets": [
+        "t1_1"
+      ]
+    },
+    {
+      "id": "t1_e2",
+      "sources": [
+        "t1_0"
+      ],
+      "targets": [
+        "t1_2"
+      ]
+    },
+    {
+      "id": "t1_e3",
+      "sources": [
+        "t1_1"
+      ],
+      "targets": [
+        "t1_3"
+      ]
+    }
+  ]
+}

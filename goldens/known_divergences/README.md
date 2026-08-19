@@ -58,10 +58,44 @@ against `expected/mergeprobe_k2_off.json` directly (e.g. with
 `tools/compare_layouts.py`) to confirm the oracle's own output doesn't
 change with the flag.
 
+## `radial_{002,003,004,006}` — transcendental ULP
+
+4 of ~20 `radial_*` cases (random trees laid out with `org.eclipse.elk.radial`)
+diverge by exactly 1 ULP in the last digit of a `double`, e.g.
+`136.98170309896418 != 136.9817030989642`. Matches the main README's
+documented "Transcendental ULP" divergence exactly (`Math.sin/cos` aren't
+correctly-rounded, and HotSpot's intrinsics differ from the Rust build's
+libm by ≤1 ULP on a minority of inputs) — not a bug, an unavoidable
+consequence of comparing two different trig implementations bit-for-bit.
+~83% of our radial sample was bit-exact, roughly consistent with the
+README's own "~93% of radial trees bit-exact" figure (small sample here).
+
+## `radial_wide_branch_001` — NOT ULP noise, undocumented, unresolved
+
+Found by `tools/fuzz_diff.py --algorithm radial` (seed 900, case index 54),
+i.e. by fuzzing beyond the curated corpus above — an 18-node random tree
+with one node having 5 children. 90 fields differ, by up to **~41.6** units
+(`/height: 305.97 != 347.54`), not 1 ULP. Deltas vary in both sign and
+magnitude across different subtrees (not a uniform scale/offset either), so
+this looks like a genuinely different structural placement for at least one
+subtree, not accumulated floating-point noise.
+
+This is **not** the same phenomenon as the 1-ULP cases above — the main
+README's "~1 ULP residual" characterization does not cover this. Whether
+it's specifically triggered by wide branching (the diverging node's 5-way
+wedge-space split) hasn't been confirmed beyond this one case; that's a
+plausible lead given `src/alg_radial/p1position.rs`'s wedge/angle
+calculations, not a diagnosis. Flagging as open — worth root-causing before
+relying on this port for radial layouts with wide branching factors.
+Repro: `cases/radial_wide_branch_001.json` /
+`expected/radial_wide_branch_001.json`.
+
 ## What passed
 
 300 general-purpose random DAG fuzz cases (`tools/fuzz_diff.py`, seed 100 —
 varying node/edge count, cycles, crossings, `direction`, `edgeRouting`,
-`spacing.nodeNode`) and 42 of the 60 curated `goldens/cases/` — including
-cycles, all four `direction` values, and non-external-port compound
-hierarchy — came back bit-identical.
+`spacing.nodeNode`) and 134 of the 138 curated `goldens/cases/` — covering
+all 12 algorithms elkrs implements — came back bit-identical. See
+`oracle/README.md` for the algorithm-specific input gotchas (seeded
+`random`, positioned `spore`, disconnected `disco`, tree-shaped
+`radial`/`mrtree`) this corpus accounts for.

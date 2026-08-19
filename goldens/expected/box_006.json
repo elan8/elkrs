@@ -1,0 +1,116 @@
+{
+  "id": "g",
+  "children": [
+    {
+      "id": "n0",
+      "layoutOptions": {
+        "org.eclipse.elk.nodeSize.constraints": "[]"
+      },
+      "x": 80.0,
+      "y": 120.0,
+      "width": 50.0,
+      "height": 50.0
+    },
+    {
+      "id": "n1",
+      "layoutOptions": {
+        "org.eclipse.elk.nodeSize.constraints": "[]"
+      },
+      "x": 80.0,
+      "y": 80.0,
+      "width": 50.0,
+      "height": 25.0
+    },
+    {
+      "id": "n2",
+      "layoutOptions": {
+        "org.eclipse.elk.nodeSize.constraints": "[]"
+      },
+      "x": 15.0,
+      "y": 15.0,
+      "width": 25.0,
+      "height": 15.0
+    },
+    {
+      "id": "n3",
+      "layoutOptions": {
+        "org.eclipse.elk.nodeSize.constraints": "[]"
+      },
+      "x": 135.0,
+      "y": 15.0,
+      "width": 15.0,
+      "height": 50.0
+    },
+    {
+      "id": "n4",
+      "layoutOptions": {
+        "org.eclipse.elk.nodeSize.constraints": "[]"
+      },
+      "x": 95.0,
+      "y": 15.0,
+      "width": 25.0,
+      "height": 25.0
+    },
+    {
+      "id": "n5",
+      "layoutOptions": {
+        "org.eclipse.elk.nodeSize.constraints": "[]"
+      },
+      "x": 15.0,
+      "y": 80.0,
+      "width": 50.0,
+      "height": 15.0
+    },
+    {
+      "id": "n6",
+      "layoutOptions": {
+        "org.eclipse.elk.nodeSize.constraints": "[]"
+      },
+      "x": 55.0,
+      "y": 15.0,
+      "width": 25.0,
+      "height": 15.0
+    },
+    {
+      "id": "n7",
+      "layoutOptions": {
+        "org.eclipse.elk.nodeSize.constraints": "[]"
+      },
+      "x": 145.0,
+      "y": 80.0,
+      "width": 50.0,
+      "height": 25.0
+    },
+    {
+      "id": "n8",
+      "layoutOptions": {
+        "org.eclipse.elk.nodeSize.constraints": "[]"
+      },
+      "x": 15.0,
+      "y": 120.0,
+      "width": 50.0,
+      "height": 35.0
+    },
+    {
+      "id": "n9",
+      "layoutOptions": {
+        "org.eclipse.elk.nodeSize.constraints": "[]"
+      },
+      "x": 145.0,
+      "y": 120.0,
+      "width": 50.0,
+      "height": 50.0
+    }
+  ],
+  "layoutOptions": {
+    "org.eclipse.elk.nodeSize.constraints": "[]",
+    "org.eclipse.elk.resolvedAlgorithm": "Layout Algorithm: org.eclipse.elk.box",
+    "org.eclipse.elk.algorithm": "org.eclipse.elk.box",
+    "org.eclipse.elk.padding": "[top=15.0,left=15.0,bottom=15.0,right=15.0]",
+    "org.eclipse.elk.hierarchyHandling": "SEPARATE_CHILDREN"
+  },
+  "x": 0.0,
+  "y": 0.0,
+  "width": 210.0,
+  "height": 185.0
+}

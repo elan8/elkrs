@@ -1,0 +1,252 @@
+{
+  "id": "g",
+  "children": [
+    {
+      "id": "t0_0",
+      "layoutOptions": {
+        "org.eclipse.elk.portLabels.placement": "[OUTSIDE]",
+        "org.eclipse.elk.nodeSize.constraints": "[]",
+        "org.eclipse.elk.nodeLabels.placement": "[]",
+        "org.eclipse.elk.nodeSize.options": "[DEFAULT_MINIMUM_SIZE]",
+        "org.eclipse.elk.margins": "[top=0.0,left=0.0,bottom=0.0,right=0.0]",
+        "org.eclipse.elk.mrtree.treeLevel": "0"
+      },
+      "x": 45.0,
+      "y": 20.0,
+      "width": 30.0,
+      "height": 30.0
+    },
+    {
+      "id": "t0_1",
+      "layoutOptions": {
+        "org.eclipse.elk.portLabels.placement": "[OUTSIDE]",
+        "org.eclipse.elk.nodeSize.constraints": "[]",
+        "org.eclipse.elk.nodeLabels.placement": "[]",
+        "org.eclipse.elk.nodeSize.options": "[DEFAULT_MINIMUM_SIZE]",
+        "org.eclipse.elk.margins": "[top=0.0,left=0.0,bottom=0.0,right=0.0]",
+        "org.eclipse.elk.mrtree.treeLevel": "1"
+      },
+      "x": 20.0,
+      "y": 70.0,
+      "width": 30.0,
+      "height": 30.0
+    },
+    {
+      "id": "t0_2",
+      "layoutOptions": {
+        "org.eclipse.elk.portLabels.placement": "[OUTSIDE]",
+        "org.eclipse.elk.nodeSize.constraints": "[]",
+        "org.eclipse.elk.nodeLabels.placement": "[]",
+        "org.eclipse.elk.nodeSize.options": "[DEFAULT_MINIMUM_SIZE]",
+        "org.eclipse.elk.margins": "[top=0.0,left=0.0,bottom=0.0,right=0.0]",
+        "org.eclipse.elk.mrtree.treeLevel": "1"
+      },
+      "x": 70.0,
+      "y": 70.0,
+      "width": 30.0,
+      "height": 30.0
+    },
+    {
+      "id": "t0_3",
+      "layoutOptions": {
+        "org.eclipse.elk.portLabels.placement": "[OUTSIDE]",
+        "org.eclipse.elk.nodeSize.constraints": "[]",
+        "org.eclipse.elk.nodeLabels.placement": "[]",
+        "org.eclipse.elk.nodeSize.options": "[DEFAULT_MINIMUM_SIZE]",
+        "org.eclipse.elk.margins": "[top=0.0,left=0.0,bottom=0.0,right=0.0]",
+        "org.eclipse.elk.mrtree.treeLevel": "2"
+      },
+      "x": 20.0,
+      "y": 120.0,
+      "width": 30.0,
+      "height": 30.0
+    },
+    {
+      "id": "t0_4",
+      "layoutOptions": {
+        "org.eclipse.elk.portLabels.placement": "[OUTSIDE]",
+        "org.eclipse.elk.nodeSize.constraints": "[]",
+        "org.eclipse.elk.nodeLabels.placement": "[]",
+        "org.eclipse.elk.nodeSize.options": "[DEFAULT_MINIMUM_SIZE]",
+        "org.eclipse.elk.margins": "[top=0.0,left=0.0,bottom=0.0,right=0.0]",
+        "org.eclipse.elk.mrtree.treeLevel": "3"
+      },
+      "x": 20.0,
+      "y": 170.0,
+      "width": 30.0,
+      "height": 30.0
+    },
+    {
+      "id": "t0_5",
+      "layoutOptions": {
+        "org.eclipse.elk.portLabels.placement": "[OUTSIDE]",
+        "org.eclipse.elk.nodeSize.constraints": "[]",
+        "org.eclipse.elk.nodeLabels.placement": "[]",
+        "org.eclipse.elk.nodeSize.options": "[DEFAULT_MINIMUM_SIZE]",
+        "org.eclipse.elk.margins": "[top=0.0,left=0.0,bottom=0.0,right=0.0]",
+        "org.eclipse.elk.mrtree.treeLevel": "2"
+      },
+      "x": 70.0,
+      "y": 120.0,
+      "width": 30.0,
+      "height": 30.0
+    }
+  ],
+  "layoutOptions": {
+    "org.eclipse.elk.algorithm": "org.eclipse.elk.mrtree",
+    "org.eclipse.elk.childAreaHeight": "180.0",
+    "org.eclipse.elk.padding": "[top=20.0,left=20.0,bottom=20.0,right=20.0]",
+    "org.eclipse.elk.nodeSize.constraints": "[]",
+    "org.eclipse.elk.spacing.portsSurrounding": "[top=0.0,left=0.0,bottom=0.0,right=0.0]",
+    "org.eclipse.elk.childAreaWidth": "80.0",
+    "org.eclipse.elk.resolvedAlgorithm": "Layout Algorithm: org.eclipse.elk.mrtree",
+    "org.eclipse.elk.nodeLabels.padding": "[top=5.0,left=5.0,bottom=5.0,right=5.0]",
+    "org.eclipse.elk.hierarchyHandling": "SEPARATE_CHILDREN"
+  },
+  "x": 0.0,
+  "y": 0.0,
+  "width": 120.0,
+  "height": 220.0,
+  "edges": [
+    {
+      "id": "t0_e1",
+      "sources": [
+        "t0_0"
+      ],
+      "targets": [
+        "t0_1"
+      ],
+      "sections": [
+        {
+          "id": "s0",
+          "startPoint": {
+            "x": 55.0,
+            "y": 50.0
+          },
+          "endPoint": {
+            "x": 35.0,
+            "y": 70.0
+          },
+          "bendPoints": [
+            {
+              "x": 55.0,
+              "y": 53.0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "t0_e2",
+      "sources": [
+        "t0_0"
+      ],
+      "targets": [
+        "t0_2"
+      ],
+      "sections": [
+        {
+          "id": "s1",
+          "startPoint": {
+            "x": 65.0,
+            "y": 50.0
+          },
+          "endPoint": {
+            "x": 85.0,
+            "y": 70.0
+          },
+          "bendPoints": [
+            {
+              "x": 65.0,
+              "y": 53.0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "t0_e3",
+      "sources": [
+        "t0_1"
+      ],
+      "targets": [
+        "t0_3"
+      ],
+      "sections": [
+        {
+          "id": "s2",
+          "startPoint": {
+            "x": 35.0,
+            "y": 100.0
+          },
+          "endPoint": {
+            "x": 35.0,
+            "y": 120.0
+          },
+          "bendPoints": [
+            {
+              "x": 35.0,
+              "y": 103.0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "t0_e4",
+      "sources": [
+        "t0_3"
+      ],
+      "targets": [
+        "t0_4"
+      ],
+      "sections": [
+        {
+          "id": "s3",
+          "startPoint": {
+            "x": 35.0,
+            "y": 150.0
+          },
+          "endPoint": {
+            "x": 35.0,
+            "y": 170.0
+          },
+          "bendPoints": [
+            {
+              "x": 35.0,
+              "y": 153.0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "t0_e5",
+      "sources": [
+        "t0_2"
+      ],
+      "targets": [
+        "t0_5"
+      ],
+      "sections": [
+        {
+          "id": "s4",
+          "startPoint": {
+            "x": 85.0,
+            "y": 100.0
+          },
+          "endPoint": {
+            "x": 85.0,
+            "y": 120.0
+          },
+          "bendPoints": [
+            {
+              "x": 85.0,
+              "y": 103.0
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,14 +1,20 @@
 #!/usr/bin/env python3
-"""Differential fuzzer: generates random `layered` graphs, lays each out with
-both the real Java ELK oracle and elkrs's own Rust CLI, and reports any
+"""Differential fuzzer: generates random ELK graphs, lays each out with both
+the real Java ELK oracle and elkrs's own Rust CLI, and reports any
 divergence.
 
 Usage:
-    python tools/fuzz_diff.py [N] --seed S [--tol T] [--keep-going]
+    python tools/fuzz_diff.py [N] --seed S [--tol T] [--algorithm A] [--keep-going]
 
 Mirrors the shape of the (lost) original tool referenced in elkrs's README:
-`tools/fuzz_diff.py [N] --seed S --algorithm A` — algorithm is currently
-fixed to `layered` (the only one the oracle in oracle/ is wired for).
+`tools/fuzz_diff.py [N] --seed S --algorithm A`. `--algorithm` accepts any of
+elkrs's 12 algorithm ids (`layered`, `force`, `stress`, `radial`, `mrtree`,
+`rectpacking`, `sporeOverlap`, `sporeCompaction`, `disco`, `topdownpacking`,
+`fixed`, `box`, `random`) or `all` (default) to pick one at random each
+iteration. Reuses the same shape generators as tools/gen_goldens.py (broader
+random parameter ranges, not the curated corpus), so the algorithm-specific
+gotchas documented in oracle/README.md (seeded `random`, positioned `spore`,
+disconnected `disco`, tree-shaped `radial`/`mrtree`) are already handled.
 
 Requires a project-local JDK 17 + Maven on PATH (or set JAVA_HOME / MVN_CMD),
 and a release build of elkrs (`cargo build --release`).
@@ -27,26 +33,34 @@ ROOT = Path(__file__).resolve().parent.parent
 ORACLE_POM = ROOT / "oracle" / "pom.xml"
 
 sys.path.insert(0, str(ROOT / "tools"))
-from gen_goldens import gen_dag, base_graph, node, edge, DIRECTIONS  # noqa: E402
+from gen_goldens import CATEGORIES  # noqa: E402
+
+# elkrs algorithm id -> gen_goldens.py category keys that exercise it.
+ALGORITHM_CATEGORIES = {
+    "layered": ["chain", "dag", "cycle", "direction", "labels_up", "compound_nested"],
+    "fixed": ["fixed"],
+    "box": ["box"],
+    "random": ["random"],
+    "force": ["force"],
+    "stress": ["stress"],
+    "radial": ["radial"],
+    "mrtree": ["mrtree"],
+    "rectpacking": ["rectpacking"],
+    "topdownpacking": ["topdownpacking"],
+    "sporeOverlap": ["sporeoverlap"],
+    "sporeCompaction": ["sporecompaction"],
+    "disco": ["disco"],
+}
 
 
-def gen_fuzz_case(rng, idx):
-    """Broader random parameter ranges than the curated goldens categories."""
-    n_nodes = rng.randint(2, 25)
-    extra_p = rng.uniform(0.0, 0.3)
-    back_p = rng.uniform(0.0, 0.2)
-    nodes, edges = gen_dag(rng, n_nodes, extra_edge_prob=extra_p, back_edge_prob=back_p)
-    opts = {}
-    if rng.random() < 0.4:
-        opts["org.eclipse.elk.direction"] = rng.choice(DIRECTIONS)
-    if rng.random() < 0.2:
-        opts["org.eclipse.elk.edgeRouting"] = rng.choice(["ORTHOGONAL", "POLYLINE", "SPLINES"])
-    if rng.random() < 0.15:
-        opts["org.eclipse.elk.spacing.nodeNode"] = rng.choice([5, 20, 50])
-    g = base_graph("g", opts)
-    g["children"] = nodes
-    g["edges"] = edges
-    return f"fuzz_{idx:05d}", g
+def gen_fuzz_case(rng, idx, algorithm):
+    """Picks a shape generator for `algorithm` (or a random algorithm, if
+    `algorithm` is "all") and calls it — same generators as the curated
+    corpus, just with fresh random content each call."""
+    algo = algorithm if algorithm != "all" else rng.choice(list(ALGORITHM_CATEGORIES))
+    category = rng.choice(ALGORITHM_CATEGORIES[algo])
+    _, g = CATEGORIES[category](rng, idx)
+    return f"fuzz_{idx:05d}_{category}", g
 
 
 def find_mvn():
@@ -125,6 +139,9 @@ def main():
     ap.add_argument("count", type=int, nargs="?", default=100)
     ap.add_argument("--seed", type=int, default=1)
     ap.add_argument("--tol", type=float, default=1e-9)
+    ap.add_argument("--algorithm", default="all",
+                     choices=list(ALGORITHM_CATEGORIES) + ["all"],
+                     help="elkrs algorithm id to fuzz, or 'all' (default) to pick one at random per case")
     ap.add_argument("--elkrs-bin", type=Path,
                      default=ROOT / "target" / "release" / "elkrs.exe")
     ap.add_argument("--keep-going", action="store_true",
@@ -145,7 +162,7 @@ def main():
 
         names = []
         for i in range(args.count):
-            name, g = gen_fuzz_case(rng, i)
+            name, g = gen_fuzz_case(rng, i, args.algorithm)
             (cases_dir / f"{name}.json").write_text(json.dumps(g), encoding="utf-8")
             names.append(name)
 

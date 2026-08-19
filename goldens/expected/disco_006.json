@@ -1,0 +1,398 @@
+{
+  "id": "g",
+  "children": [
+    {
+      "id": "c0_0",
+      "x": 63.0920596099768,
+      "y": 60.061986052477636,
+      "width": 30.0,
+      "height": 30.0
+    },
+    {
+      "id": "c0_1",
+      "x": 63.0920596099768,
+      "y": 60.061986052477636,
+      "width": 30.0,
+      "height": 30.0
+    },
+    {
+      "id": "c0_2",
+      "x": 63.0920596099768,
+      "y": 60.061986052477636,
+      "width": 30.0,
+      "height": 30.0
+    },
+    {
+      "id": "c0_3",
+      "x": 63.0920596099768,
+      "y": 60.061986052477636,
+      "width": 30.0,
+      "height": 30.0
+    },
+    {
+      "id": "c1_0",
+      "x": 13.050735574991716,
+      "y": 10.020662017492544,
+      "width": 30.0,
+      "height": 30.0
+    },
+    {
+      "id": "c1_1",
+      "x": 13.050735574991716,
+      "y": 10.020662017492544,
+      "width": 30.0,
+      "height": 30.0
+    },
+    {
+      "id": "c1_2",
+      "x": 13.050735574991716,
+      "y": 10.020662017492544,
+      "width": 30.0,
+      "height": 30.0
+    },
+    {
+      "id": "c2_0",
+      "x": 68.65220672497514,
+      "y": 10.020662017492544,
+      "width": 30.0,
+      "height": 30.0
+    },
+    {
+      "id": "c2_1",
+      "x": 68.65220672497514,
+      "y": 10.020662017492544,
+      "width": 30.0,
+      "height": 30.0
+    },
+    {
+      "id": "c2_2",
+      "x": 68.65220672497514,
+      "y": 10.020662017492544,
+      "width": 30.0,
+      "height": 30.0
+    },
+    {
+      "id": "c2_3",
+      "x": 68.65220672497514,
+      "y": 10.020662017492544,
+      "width": 30.0,
+      "height": 30.0
+    },
+    {
+      "id": "c3_0",
+      "x": 13.050735574991716,
+      "y": 110.10331008746272,
+      "width": 30.0,
+      "height": 30.0
+    },
+    {
+      "id": "c3_1",
+      "x": 13.050735574991716,
+      "y": 110.10331008746272,
+      "width": 30.0,
+      "height": 30.0
+    },
+    {
+      "id": "c3_2",
+      "x": 13.050735574991716,
+      "y": 110.10331008746272,
+      "width": 30.0,
+      "height": 30.0
+    },
+    {
+      "id": "c3_3",
+      "x": 13.050735574991716,
+      "y": 110.10331008746272,
+      "width": 30.0,
+      "height": 30.0
+    }
+  ],
+  "layoutOptions": {
+    "org.eclipse.elk.resolvedAlgorithm": "Layout Algorithm: org.eclipse.elk.disco",
+    "org.eclipse.elk.disco.debug.discoGraph": "org.eclipse.elk.alg.disco.graph.DCGraph",
+    "org.eclipse.elk.disco.debug.discoPolys": "[ 0123456789\n0XXXXXXXXXX\n1XXXXXXXXXX\n2XXXXXXXXXX\n3XXXXXXXXXX\n4XXXXXXXXXX\n5XXXXXXXXXX\n6XXXXXXXXXX\n7XXXXXXXXXX\n8XXXXXXXXXX,  0123456789\n0XXXXXXXXXX\n1XXXXXXXXXX\n2XXXXXXXXXX\n3XXXXXXXXXX\n4XXXXXXXXXX\n5XXXXXXXXXX\n6XXXXXXXXXX\n7XXXXXXXXXX\n8XXXXXXXXXX,  0123456789\n0XXXXXXXXXX\n1XXXXXXXXXX\n2XXXXXXXXXX\n3XXXXXXXXXX\n4XXXXXXXXXX\n5XXXXXXXXXX\n6XXXXXXXXXX\n7XXXXXXXXXX\n8XXXXXXXXXX,  0123456789\n0XXXXXXXXXX\n1XXXXXXXXXX\n2XXXXXXXXXX\n3XXXXXXXXXX\n4XXXXXXXXXX\n5XXXXXXXXXX\n6XXXXXXXXXX\n7XXXXXXXXXX\n8XXXXXXXXXX]",
+    "org.eclipse.elk.algorithm": "org.eclipse.elk.disco",
+    "org.eclipse.elk.hierarchyHandling": "SEPARATE_CHILDREN"
+  },
+  "x": 0.0,
+  "y": 0.0,
+  "width": 135.20294229996688,
+  "height": 174.12397210495527,
+  "edges": [
+    {
+      "id": "c0_e1",
+      "sources": [
+        "c0_0"
+      ],
+      "targets": [
+        "c0_1"
+      ],
+      "sections": [
+        {
+          "id": "s0",
+          "startPoint": {
+            "x": 63.0920596099768,
+            "y": 60.061986052477636
+          },
+          "endPoint": {
+            "x": 63.0920596099768,
+            "y": 60.061986052477636
+          }
+        }
+      ],
+      "layoutOptions": {
+        "org.eclipse.elk.junctionPoints": "()"
+      }
+    },
+    {
+      "id": "c0_e2",
+      "sources": [
+        "c0_0"
+      ],
+      "targets": [
+        "c0_2"
+      ],
+      "sections": [
+        {
+          "id": "s1",
+          "startPoint": {
+            "x": 63.0920596099768,
+            "y": 60.061986052477636
+          },
+          "endPoint": {
+            "x": 63.0920596099768,
+            "y": 60.061986052477636
+          }
+        }
+      ],
+      "layoutOptions": {
+        "org.eclipse.elk.junctionPoints": "()"
+      }
+    },
+    {
+      "id": "c0_e3",
+      "sources": [
+        "c0_1"
+      ],
+      "targets": [
+        "c0_3"
+      ],
+      "sections": [
+        {
+          "id": "s2",
+          "startPoint": {
+            "x": 63.0920596099768,
+            "y": 60.061986052477636
+          },
+          "endPoint": {
+            "x": 63.0920596099768,
+            "y": 60.061986052477636
+          }
+        }
+      ],
+      "layoutOptions": {
+        "org.eclipse.elk.junctionPoints": "()"
+      }
+    },
+    {
+      "id": "c1_e1",
+      "sources": [
+        "c1_0"
+      ],
+      "targets": [
+        "c1_1"
+      ],
+      "sections": [
+        {
+          "id": "s3",
+          "startPoint": {
+            "x": 13.050735574991716,
+            "y": 10.020662017492544
+          },
+          "endPoint": {
+            "x": 13.050735574991716,
+            "y": 10.020662017492544
+          }
+        }
+      ],
+      "layoutOptions": {
+        "org.eclipse.elk.junctionPoints": "()"
+      }
+    },
+    {
+      "id": "c1_e2",
+      "sources": [
+        "c1_0"
+      ],
+      "targets": [
+        "c1_2"
+      ],
+      "sections": [
+        {
+          "id": "s4",
+          "startPoint": {
+            "x": 13.050735574991716,
+            "y": 10.020662017492544
+          },
+          "endPoint": {
+            "x": 13.050735574991716,
+            "y": 10.020662017492544
+          }
+        }
+      ],
+      "layoutOptions": {
+        "org.eclipse.elk.junctionPoints": "()"
+      }
+    },
+    {
+      "id": "c2_e1",
+      "sources": [
+        "c2_0"
+      ],
+      "targets": [
+        "c2_1"
+      ],
+      "sections": [
+        {
+          "id": "s5",
+          "startPoint": {
+            "x": 68.65220672497514,
+            "y": 10.020662017492544
+          },
+          "endPoint": {
+            "x": 68.65220672497514,
+            "y": 10.020662017492544
+          }
+        }
+      ],
+      "layoutOptions": {
+        "org.eclipse.elk.junctionPoints": "()"
+      }
+    },
+    {
+      "id": "c2_e2",
+      "sources": [
+        "c2_0"
+      ],
+      "targets": [
+        "c2_2"
+      ],
+      "sections": [
+        {
+          "id": "s6",
+          "startPoint": {
+            "x": 68.65220672497514,
+            "y": 10.020662017492544
+          },
+          "endPoint": {
+            "x": 68.65220672497514,
+            "y": 10.020662017492544
+          }
+        }
+      ],
+      "layoutOptions": {
+        "org.eclipse.elk.junctionPoints": "()"
+      }
+    },
+    {
+      "id": "c2_e3",
+      "sources": [
+        "c2_2"
+      ],
+      "targets": [
+        "c2_3"
+      ],
+      "sections": [
+        {
+          "id": "s7",
+          "startPoint": {
+            "x": 68.65220672497514,
+            "y": 10.020662017492544
+          },
+          "endPoint": {
+            "x": 68.65220672497514,
+            "y": 10.020662017492544
+          }
+        }
+      ],
+      "layoutOptions": {
+        "org.eclipse.elk.junctionPoints": "()"
+      }
+    },
+    {
+      "id": "c3_e1",
+      "sources": [
+        "c3_0"
+      ],
+      "targets": [
+        "c3_1"
+      ],
+      "sections": [
+        {
+          "id": "s8",
+          "startPoint": {
+            "x": 13.050735574991716,
+            "y": 110.10331008746272
+          },
+          "endPoint": {
+            "x": 13.050735574991716,
+            "y": 110.10331008746272
+          }
+        }
+      ],
+      "layoutOptions": {
+        "org.eclipse.elk.junctionPoints": "()"
+      }
+    },
+    {
+      "id": "c3_e2",
+      "sources": [
+        "c3_0"
+      ],
+      "targets": [
+        "c3_2"
+      ],
+      "sections": [
+        {
+          "id": "s9",
+          "startPoint": {
+            "x": 13.050735574991716,
+            "y": 110.10331008746272
+          },
+          "endPoint": {
+            "x": 13.050735574991716,
+            "y": 110.10331008746272
+          }
+        }
+      ],
+      "layoutOptions": {
+        "org.eclipse.elk.junctionPoints": "()"
+      }
+    },
+    {
+      "id": "c3_e3",
+      "sources": [
+        "c3_0"
+      ],
+      "targets": [
+        "c3_3"
+      ],
+      "sections": [
+        {
+          "id": "s10",
+          "startPoint": {
+            "x": 13.050735574991716,
+            "y": 110.10331008746272
+          },
+          "endPoint": {
+            "x": 13.050735574991716,
+            "y": 110.10331008746272
+          }
+        }
+      ],
+      "layoutOptions": {
+        "org.eclipse.elk.junctionPoints": "()"
+      }
+    }
+  ]
+}

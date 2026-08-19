@@ -1,0 +1,197 @@
+{
+  "id": "g",
+  "layoutOptions": {
+    "org.eclipse.elk.algorithm": "org.eclipse.elk.radial"
+  },
+  "children": [
+    {
+      "id": "n0",
+      "width": 30,
+      "height": 30
+    },
+    {
+      "id": "n1",
+      "width": 30,
+      "height": 30
+    },
+    {
+      "id": "n2",
+      "width": 30,
+      "height": 30
+    },
+    {
+      "id": "n3",
+      "width": 30,
+      "height": 30
+    },
+    {
+      "id": "n4",
+      "width": 30,
+      "height": 30
+    },
+    {
+      "id": "n5",
+      "width": 30,
+      "height": 30
+    },
+    {
+      "id": "n6",
+      "width": 30,
+      "height": 30
+    },
+    {
+      "id": "n7",
+      "width": 30,
+      "height": 30
+    },
+    {
+      "id": "n8",
+      "width": 30,
+      "height": 30
+    },
+    {
+      "id": "n9",
+      "width": 30,
+      "height": 30
+    },
+    {
+      "id": "n10",
+      "width": 30,
+      "height": 30
+    },
+    {
+      "id": "n11",
+      "width": 30,
+      "height": 30
+    },
+    {
+      "id": "n12",
+      "width": 30,
+      "height": 30
+    },
+    {
+      "id": "n13",
+      "width": 30,
+      "height": 30
+    }
+  ],
+  "edges": [
+    {
+      "id": "ne1",
+      "sources": [
+        "n0"
+      ],
+      "targets": [
+        "n1"
+      ]
+    },
+    {
+      "id": "ne2",
+      "sources": [
+        "n1"
+      ],
+      "targets": [
+        "n2"
+      ]
+    },
+    {
+      "id": "ne3",
+      "sources": [
+        "n2"
+      ],
+      "targets": [
+        "n3"
+      ]
+    },
+    {
+      "id": "ne4",
+      "sources": [
+        "n2"
+      ],
+      "targets": [
+        "n4"
+      ]
+    },
+    {
+      "id": "ne5",
+      "sources": [
+        "n2"
+      ],
+      "targets": [
+        "n5"
+      ]
+    },
+    {
+      "id": "ne6",
+      "sources": [
+        "n2"
+      ],
+      "targets": [
+        "n6"
+      ]
+    },
+    {
+      "id": "ne7",
+      "sources": [
+        "n2"
+      ],
+      "targets": [
+        "n7"
+      ]
+    },
+    {
+      "id": "ne8",
+      "sources": [
+        "n7"
+      ],
+      "targets": [
+        "n8"
+      ]
+    },
+    {
+      "id": "ne9",
+      "sources": [
+        "n7"
+      ],
+      "targets": [
+        "n9"
+      ]
+    },
+    {
+      "id": "ne10",
+      "sources": [
+        "n1"
+      ],
+      "targets": [
+        "n10"
+      ]
+    },
+    {
+      "id": "ne11",
+      "sources": [
+        "n7"
+      ],
+      "targets": [
+        "n11"
+      ]
+    },
+    {
+      "id": "ne12",
+      "sources": [
+        "n5"
+      ],
+      "targets": [
+        "n12"
+      ]
+    },
+    {
+      "id": "ne13",
+      "sources": [
+        "n3"
+      ],
+      "targets": [
+        "n13"
+      ]
+    }
+  ]
+}
