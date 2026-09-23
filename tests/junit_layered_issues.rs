@@ -11,6 +11,63 @@ fn layout(g: Value) -> Value {
     elkrs::create_elk().layout_json(&g.to_string()).expect("layout must not fail")
 }
 
+/// Issue #1: hierarchy-crossing edges through a container port must not panic
+/// in the layered crossings counter.
+#[test]
+fn issue1_hierarchy_crossing_port_crossings() {
+    let g = json!({
+        "id": "root",
+        "layoutOptions": {
+            "elk.hierarchyHandling": "INCLUDE_CHILDREN"
+        },
+        "children": [
+            {
+                "id": "n0",
+                "width": 72.0,
+                "height": 110.0,
+                "layoutOptions": {
+                    "elk.algorithm": "layered",
+                    "elk.padding": "[top=25.0,left=15.0,bottom=15.0,right=15.0]"
+                },
+                "children": []
+            },
+            { "id": "n13", "width": 75.0, "height": 95.0 },
+            {
+                "id": "n18",
+                "width": 56.0,
+                "height": 88.0,
+                "layoutOptions": {
+                    "elk.algorithm": "layered",
+                    "elk.padding": "[top=25.0,left=15.0,bottom=15.0,right=15.0]"
+                },
+                "children": [
+                    {
+                        "id": "n18.c20",
+                        "width": 120.0,
+                        "height": 116.0,
+                        "ports": [
+                            { "id": "n18.c20.p0", "width": 8.0, "height": 8.0 },
+                            { "id": "n18.c20.p2", "width": 8.0, "height": 8.0 }
+                        ],
+                        "layoutOptions": { "elk.portConstraints": "FREE" }
+                    }
+                ]
+            }
+        ],
+        "edges": [
+            { "id": "e13", "sources": ["n18.c20.p0"], "targets": ["n13"] },
+            { "id": "e25", "sources": ["n0"], "targets": ["n18.c20.p0"] }
+        ]
+    });
+    let o = layout(g);
+    let children = o["children"].as_array().expect("root children");
+    assert_eq!(children.len(), 3);
+    for child in children {
+        assert!(child["x"].as_f64().unwrap().is_finite());
+        assert!(child["y"].as_f64().unwrap().is_finite());
+    }
+}
+
 /// `Issue562Test`: a node with two ports and a self edge, with inside-self-loops
 /// activated, must lay out without raising an unsupported-configuration error.
 #[test]
