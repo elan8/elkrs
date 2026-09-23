@@ -157,7 +157,7 @@ impl CrossingsCounter {
         right_layer_nodes: &[LNodeId],
     ) -> i32 {
         let ports = self.init_port_positions_counter_clockwise(a, left_layer_nodes, right_layer_nodes);
-        self.index_tree = Some(BinaryIndexedTree::new(ports.len()));
+        self.index_tree = Some(self.new_index_tree(ports.len()));
         self.count_crossings_on_ports(a, &ports)
     }
 
@@ -180,7 +180,7 @@ impl CrossingsCounter {
         layer: &[LNodeId],
     ) -> i32 {
         let ports = self.init_positions_for_north_south_counting(a, layer);
-        self.index_tree = Some(BinaryIndexedTree::new(ports.len()));
+        self.index_tree = Some(self.new_index_tree(ports.len()));
         self.count_north_south_crossings_on_ports(a, &ports)
     }
 
@@ -229,7 +229,7 @@ impl CrossingsCounter {
         right_layer_nodes: &[LNodeId],
     ) {
         let ports = self.init_port_positions_counter_clockwise(a, left_layer_nodes, right_layer_nodes);
-        self.index_tree = Some(BinaryIndexedTree::new(ports.len()));
+        self.index_tree = Some(self.new_index_tree(ports.len()));
     }
 
     pub fn init_port_positions_for_in_layer_crossings(
@@ -240,8 +240,22 @@ impl CrossingsCounter {
     ) -> Vec<LPortId> {
         let mut ports = Vec::new();
         self.init_positions(a, nodes, &mut ports, side, true, true);
-        self.index_tree = Some(BinaryIndexedTree::new(ports.len()));
+        self.index_tree = Some(self.new_index_tree(ports.len()));
         ports
+    }
+
+    /// Tree capacity for one counting pass.
+    ///
+    /// Positions are stored in the shared `port_positions` array and are not
+    /// cleared between passes. An edge can therefore end at a port that this
+    /// pass did not index — a hierarchy-crossing edge through a container
+    /// port, whose other end still holds a position assigned while indexing a
+    /// different side (an unused sibling port is enough to push that position
+    /// past `indexed_ports`). The tree has to accept every slot of the shared
+    /// array, not only the ports indexed for the current pair of layers.
+    fn new_index_tree(&self, indexed_ports: usize) -> BinaryIndexedTree {
+        let span = self.port_positions.borrow().len();
+        BinaryIndexedTree::new(indexed_ports.max(span))
     }
 
     /// Notify counter of port switch.
