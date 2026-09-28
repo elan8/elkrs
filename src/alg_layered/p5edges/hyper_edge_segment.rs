@@ -3,9 +3,9 @@
 //! their dependencies live in a
 //! [`SegmentStore`] arena and reference each other through indices.
 
-use std::collections::HashMap;
+use std::collections::{BTreeSet, HashMap};
 
-use crate::alg_layered::graph::{LEdgeId, LGraphArena, LPortId};
+use crate::alg_layered::graph::{LEdgeId, LGraphArena, LPortId, NodeType};
 
 use super::direction::BaseRoutingDirectionStrategy;
 use super::hyper_edge_segment_dependency::{self as dependency, HyperEdgeSegmentDependency};
@@ -19,22 +19,36 @@ pub type DependencyId = usize;
 pub const PER_EDGE_LANE_SPACING: f64 = 4.0;
 
 pub fn edge_lane_offset(a: &LGraphArena, port: LPortId, edge: LEdgeId) -> f64 {
-    let incident_edges: Vec<LEdgeId> = a
-        .port(port)
-        .incoming_edges
-        .iter()
-        .chain(a.port(port).outgoing_edges.iter())
-        .copied()
-        .filter(|candidate| !a.edge_is_self_loop(*candidate))
-        .collect();
-    if incident_edges.len() <= 1 {
+    debug_assert!(a.port(port).incoming_edges.contains(&edge) || a.port(port).outgoing_edges.contains(&edge));
+    let mut component = BTreeSet::new();
+    let mut pending = vec![edge];
+    while let Some(candidate) = pending.pop() {
+        if a.edge_is_self_loop(candidate) || !component.insert(candidate) {
+            continue;
+        }
+        for endpoint in [a.edge(candidate).source, a.edge(candidate).target]
+            .into_iter()
+            .flatten()
+        {
+            let mut connected_ports = vec![endpoint];
+            let node = a.port(endpoint).node.unwrap();
+            if a.node(node).node_type == NodeType::LONG_EDGE {
+                connected_ports.extend(a.node(node).ports.iter().copied().filter(|p| *p != endpoint));
+            }
+            for connected_port in connected_ports {
+                pending.extend(a.port(connected_port).incoming_edges.iter().copied());
+                pending.extend(a.port(connected_port).outgoing_edges.iter().copied());
+            }
+        }
+    }
+    if component.len() <= 1 {
         return 0.0;
     }
-    let index = incident_edges
+    let index = component
         .iter()
         .position(|candidate| *candidate == edge)
-        .expect("edge is not incident to its port");
-    (index as f64 - (incident_edges.len() - 1) as f64 / 2.0) * PER_EDGE_LANE_SPACING
+        .expect("edge is not in its connected component");
+    (index as f64 - (component.len() - 1) as f64 / 2.0) * PER_EDGE_LANE_SPACING
 }
 
 pub struct HyperEdgeSegment {
