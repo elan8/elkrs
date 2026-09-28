@@ -29,8 +29,13 @@ pub fn process(a: &mut LGraphArena, graph: LGraphId, random: &mut JavaRandom) ->
         a.graph(graph).properties.get(&lopts::SPACING_EDGE_NODE_BETWEEN_LAYERS);
 
     // Prepare for iteration!
-    let mut routing_generator =
-        OrthogonalRoutingGenerator::new(RoutingDirection::WestToEast, edge_edge_spacing, "phase5");
+    let per_edge_routing = a.graph(graph).properties.get(&lopts::PER_EDGE_ROUTING);
+    let mut routing_generator = OrthogonalRoutingGenerator::new(
+        RoutingDirection::WestToEast,
+        edge_edge_spacing,
+        "phase5",
+        per_edge_routing,
+    );
     // the x position is accumulated in a float!
     let mut xpos: f32 = 0.0;
     let layers = a.graph(graph).layers.clone();

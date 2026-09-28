@@ -42,7 +42,9 @@ pub fn processor_configuration(
             let graph_properties: EnumSet<GraphProperties> =
                 a.graph(graph).properties.get(&iprops::GRAPH_PROPERTIES);
 
-            if graph_properties.contains(GraphProperties::HYPEREDGES) {
+            if graph_properties.contains(GraphProperties::HYPEREDGES)
+                && !a.graph(graph).properties.get(&lopts::PER_EDGE_ROUTING)
+            {
                 config.add_before(LayeredPhases::P4_NODE_PLACEMENT, Ips::HYPEREDGE_DUMMY_MERGER);
                 config.add_before(LayeredPhases::P3_NODE_ORDERING, Ips::INVERTED_PORT_PROCESSOR);
             }

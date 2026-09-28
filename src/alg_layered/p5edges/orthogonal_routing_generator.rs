@@ -4,12 +4,12 @@
 //! al. The actual routing direction is handled by a
 //! [`BaseRoutingDirectionStrategy`].
 
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 
 use crate::core::javacompat::JavaRandom;
 use crate::core::options::PortSide;
 
-use crate::alg_layered::graph::{LGraphArena, LNodeId, LPortId};
+use crate::alg_layered::graph::{LEdgeId, LGraphArena, LNodeId, LPortId};
 
 use super::direction::{BaseRoutingDirectionStrategy, RoutingDirection};
 use super::hyper_edge_cycle_detector;
@@ -44,17 +44,24 @@ pub struct OrthogonalRoutingGenerator {
     /// threshold at which horizontal line segments are considered to overlap
     /// (recomputed for each pair of layers).
     critical_conflict_threshold: f64,
+    per_edge_routing: bool,
 }
 
 impl OrthogonalRoutingGenerator {
     /// Constructor (the debug prefix is accepted for parity but unused;
     /// debug graph output is not ported).
-    pub fn new(direction: RoutingDirection, edge_spacing: f64, _debug_prefix: &str) -> Self {
+    pub fn new(
+        direction: RoutingDirection,
+        edge_spacing: f64,
+        _debug_prefix: &str,
+        per_edge_routing: bool,
+    ) -> Self {
         OrthogonalRoutingGenerator {
             routing_strategy: BaseRoutingDirectionStrategy::for_routing_direction(direction),
             edge_spacing,
             conflict_threshold: CONFLICT_THRESHOLD_FACTOR * edge_spacing,
             critical_conflict_threshold: 0.0,
+            per_edge_routing,
         }
     }
 
@@ -78,24 +85,42 @@ impl OrthogonalRoutingGenerator {
         let mut port_to_edge_segment_map: HashMap<LPortId, SegmentId> = HashMap::new();
         let mut edge_segments: Vec<SegmentId> = Vec::new();
 
-        // create hyperedge segments for eastern output ports of the left layer and
-        // for western output ports of the right layer
-        self.create_hyper_edge_segments(
-            a,
-            source_layer_nodes,
-            self.routing_strategy.source_port_side(),
-            &mut store,
-            &mut edge_segments,
-            &mut port_to_edge_segment_map,
-        );
-        self.create_hyper_edge_segments(
-            a,
-            target_layer_nodes,
-            self.routing_strategy.target_port_side(),
-            &mut store,
-            &mut edge_segments,
-            &mut port_to_edge_segment_map,
-        );
+        if self.per_edge_routing {
+            let mut routed_edges = HashSet::new();
+            self.create_per_edge_segments(
+                a,
+                source_layer_nodes,
+                self.routing_strategy.source_port_side(),
+                &mut store,
+                &mut edge_segments,
+                &mut routed_edges,
+            );
+            self.create_per_edge_segments(
+                a,
+                target_layer_nodes,
+                self.routing_strategy.target_port_side(),
+                &mut store,
+                &mut edge_segments,
+                &mut routed_edges,
+            );
+        } else {
+            self.create_hyper_edge_segments(
+                a,
+                source_layer_nodes,
+                self.routing_strategy.source_port_side(),
+                &mut store,
+                &mut edge_segments,
+                &mut port_to_edge_segment_map,
+            );
+            self.create_hyper_edge_segments(
+                a,
+                target_layer_nodes,
+                self.routing_strategy.target_port_side(),
+                &mut store,
+                &mut edge_segments,
+                &mut port_to_edge_segment_map,
+            );
+        }
 
         // Our critical conflict threshold is a fraction of the minimum distance
         // between two horizontal hyperedge segments
@@ -156,6 +181,37 @@ impl OrthogonalRoutingGenerator {
 
     ///////////////////////////////////////////////////////////////////////////////
     // Hyper Edge Graph Creation
+
+    fn create_per_edge_segments(
+        &self,
+        a: &LGraphArena,
+        nodes: Option<&[LNodeId]>,
+        port_side: PortSide,
+        store: &mut SegmentStore,
+        edge_segments: &mut Vec<SegmentId>,
+        routed_edges: &mut HashSet<LEdgeId>,
+    ) {
+        let Some(nodes) = nodes else { return };
+        for &node in nodes {
+            for &port in &a.node(node).ports {
+                if a.port(port).side != port_side {
+                    continue;
+                }
+                for &edge in &a.port(port).outgoing_edges {
+                    if a.edge_is_self_loop(edge) || !routed_edges.insert(edge) {
+                        continue;
+                    }
+                    let source = a.edge(edge).source.expect("edge without source");
+                    let target = a.edge(edge).target.expect("edge without target");
+                    let segment = store.create_segment();
+                    store.segments[segment].edge = Some(edge);
+                    store.add_port_position(a, segment, source, &self.routing_strategy);
+                    store.add_port_position(a, segment, target, &self.routing_strategy);
+                    edge_segments.push(segment);
+                }
+            }
+        }
+    }
 
     /// `createHyperEdgeSegments`: creates hyperedge segments for the given layer.
     fn create_hyper_edge_segments(

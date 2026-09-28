@@ -98,58 +98,69 @@ impl BaseRoutingDirectionStrategy {
         let segment_coordinate = start_pos
             + slot_sign * (store.segments[segment].routing_slot as f64 * edge_spacing);
 
+        if let Some(edge) = store.segments[segment].edge {
+            self.calculate_edge_bend_points(
+                a, store, segment, edge, segment_coordinate, start_pos, slot_sign, edge_spacing,
+            );
+            return;
+        }
+
         let ports = store.segments[segment].ports.clone();
         for port in ports {
-            let source_pos = self.absolute_anchor_coordinate(a, port);
-
             let outgoing_edges = a.port(port).outgoing_edges.clone();
             for edge in outgoing_edges {
-                if !a.edge_is_self_loop(edge) {
-                    let target = a.edge(edge).target.unwrap();
-                    let target_pos = self.absolute_anchor_coordinate(a, target);
-
-                    if (source_pos - target_pos).abs() > TOLERANCE {
-                        // We'll update these if we find that the segment was split
-                        let mut current_coordinate = segment_coordinate;
-                        let mut current_segment = segment;
-
-                        let bend = self.make_bend(current_coordinate, source_pos);
-                        a.edge_mut(edge).bend_points.add_last(bend);
-                        self.add_junction_point_if_necessary(a, edge, store, current_segment, bend);
-
-                        // If this segment was split, we need two additional bend points
-                        let split_partner = store.segments[segment].split_partner;
-                        if let Some(split_partner) = split_partner {
-                            let split_pos =
-                                store.segments[split_partner].incoming_connection_coordinates[0];
-
-                            let bend = self.make_bend(current_coordinate, split_pos);
-                            a.edge_mut(edge).bend_points.add_last(bend);
-                            self.add_junction_point_if_necessary(
-                                a, edge, store, current_segment, bend,
-                            );
-
-                            // Advance to the split partner's routing slot
-                            current_coordinate = start_pos
-                                + slot_sign
-                                    * (store.segments[split_partner].routing_slot as f64
-                                        * edge_spacing);
-                            current_segment = split_partner;
-
-                            let bend = self.make_bend(current_coordinate, split_pos);
-                            a.edge_mut(edge).bend_points.add_last(bend);
-                            self.add_junction_point_if_necessary(
-                                a, edge, store, current_segment, bend,
-                            );
-                        }
-
-                        let bend = self.make_bend(current_coordinate, target_pos);
-                        a.edge_mut(edge).bend_points.add_last(bend);
-                        self.add_junction_point_if_necessary(a, edge, store, current_segment, bend);
-                    }
-                }
+                self.calculate_edge_bend_points(
+                    a, store, segment, edge, segment_coordinate, start_pos, slot_sign, edge_spacing,
+                );
             }
         }
+    }
+
+    fn calculate_edge_bend_points(
+        &mut self,
+        a: &mut LGraphArena,
+        store: &SegmentStore,
+        segment: SegmentId,
+        edge: LEdgeId,
+        segment_coordinate: f64,
+        start_pos: f64,
+        slot_sign: f64,
+        edge_spacing: f64,
+    ) {
+        if a.edge_is_self_loop(edge) {
+            return;
+        }
+        let source = a.edge(edge).source.unwrap();
+        let target = a.edge(edge).target.unwrap();
+        let source_pos = self.absolute_anchor_coordinate(a, source);
+        let target_pos = self.absolute_anchor_coordinate(a, target);
+        if (source_pos - target_pos).abs() <= TOLERANCE {
+            return;
+        }
+
+        let mut current_coordinate = segment_coordinate;
+        let mut current_segment = segment;
+        let bend = self.make_bend(current_coordinate, source_pos);
+        a.edge_mut(edge).bend_points.add_last(bend);
+        self.add_junction_point_if_necessary(a, edge, store, current_segment, bend);
+
+        if let Some(split_partner) = store.segments[segment].split_partner {
+            let split_pos = store.segments[split_partner].incoming_connection_coordinates[0];
+            let bend = self.make_bend(current_coordinate, split_pos);
+            a.edge_mut(edge).bend_points.add_last(bend);
+            self.add_junction_point_if_necessary(a, edge, store, current_segment, bend);
+
+            current_coordinate = start_pos
+                + slot_sign * (store.segments[split_partner].routing_slot as f64 * edge_spacing);
+            current_segment = split_partner;
+            let bend = self.make_bend(current_coordinate, split_pos);
+            a.edge_mut(edge).bend_points.add_last(bend);
+            self.add_junction_point_if_necessary(a, edge, store, current_segment, bend);
+        }
+
+        let bend = self.make_bend(current_coordinate, target_pos);
+        a.edge_mut(edge).bend_points.add_last(bend);
+        self.add_junction_point_if_necessary(a, edge, store, current_segment, bend);
     }
 
     /// `port.getAbsoluteAnchor()` projected onto the hyperedge axis: the y

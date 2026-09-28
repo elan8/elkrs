@@ -5,7 +5,7 @@
 
 use std::collections::HashMap;
 
-use crate::alg_layered::graph::{LGraphArena, LPortId};
+use crate::alg_layered::graph::{LEdgeId, LGraphArena, LPortId};
 
 use super::direction::BaseRoutingDirectionStrategy;
 use super::hyper_edge_segment_dependency::{self as dependency, HyperEdgeSegmentDependency};
@@ -16,6 +16,9 @@ pub type SegmentId = usize;
 pub type DependencyId = usize;
 
 pub struct HyperEdgeSegment {
+    /// When set, this segment belongs to exactly one modeled edge. `None`
+    /// retains ELK's port-net/hyperedge behavior.
+    pub edge: Option<LEdgeId>,
     /// ports represented by this hypernode.
     pub ports: Vec<LPortId>,
     /// mark value used for cycle breaking.
@@ -51,6 +54,7 @@ pub struct HyperEdgeSegment {
 impl HyperEdgeSegment {
     fn new() -> Self {
         HyperEdgeSegment {
+            edge: None,
             ports: Vec::new(),
             mark: 0,
             routing_slot: 0,
@@ -173,18 +177,7 @@ impl SegmentStore {
         strategy: &BaseRoutingDirectionStrategy,
     ) {
         hyper_edge_segment_map.insert(port, seg);
-        self.segments[seg].ports.push(port);
-        let port_pos = strategy.port_position_on_hyper_node(a, port);
-
-        // add the new port position to the respective list
-        if a.port(port).side == strategy.source_port_side() {
-            insert_sorted(&mut self.segments[seg].incoming_connection_coordinates, port_pos);
-        } else {
-            insert_sorted(&mut self.segments[seg].outgoing_connection_coordinates, port_pos);
-        }
-
-        // update start and end coordinates
-        self.segments[seg].recompute_extent();
+        self.add_port_position(a, seg, port, strategy);
 
         // add connected ports (predecessor ports followed by successor ports)
         let mut connected_ports: Vec<LPortId> = Vec::new();
@@ -201,6 +194,27 @@ impl SegmentStore {
         }
     }
 
+    /// Adds only this port to a segment. This is used by per-edge routing,
+    /// where following every edge incident to a port would recreate a net.
+    pub fn add_port_position(
+        &mut self,
+        a: &LGraphArena,
+        seg: SegmentId,
+        port: LPortId,
+        strategy: &BaseRoutingDirectionStrategy,
+    ) {
+        if !self.segments[seg].ports.contains(&port) {
+            self.segments[seg].ports.push(port);
+        }
+        let port_pos = strategy.port_position_on_hyper_node(a, port);
+        if a.port(port).side == strategy.source_port_side() {
+            insert_sorted(&mut self.segments[seg].incoming_connection_coordinates, port_pos);
+        } else {
+            insert_sorted(&mut self.segments[seg].outgoing_connection_coordinates, port_pos);
+        }
+        self.segments[seg].recompute_extent();
+    }
+
     /// Returns `(newSplit,
     /// newSplitPartner)`. The new segments live in this store but are not part
     /// of any segment list.
@@ -211,10 +225,12 @@ impl SegmentStore {
         let incoming = self.segments[seg].incoming_connection_coordinates.clone();
         let outgoing = self.segments[seg].outgoing_connection_coordinates.clone();
         let split_by = self.segments[seg].split_by;
+        let edge = self.segments[seg].edge;
 
         {
             let s = &mut self.segments[new_split];
             s.incoming_connection_coordinates = incoming;
+            s.edge = edge;
             s.split_by = split_by;
             s.split_partner = Some(new_split_partner);
             s.recompute_extent();
@@ -222,6 +238,7 @@ impl SegmentStore {
         {
             let s = &mut self.segments[new_split_partner];
             s.outgoing_connection_coordinates = outgoing;
+            s.edge = edge;
             s.split_partner = Some(new_split);
             s.recompute_extent();
         }
@@ -232,6 +249,7 @@ impl SegmentStore {
     /// Splits this segment into two and returns the new segment.
     pub fn split_at(&mut self, seg: SegmentId, split_position: f64) -> SegmentId {
         let split_partner = self.create_segment();
+        self.segments[split_partner].edge = self.segments[seg].edge;
         self.segments[seg].split_partner = Some(split_partner);
         self.segments[split_partner].split_partner = Some(seg);
 

@@ -286,6 +286,7 @@ fn route_edges(
 
     let node_spacing: f64 = a.graph(graph).properties.get(&lopts::SPACING_NODE_NODE);
     let edge_spacing: f64 = a.graph(graph).properties.get(&lopts::SPACING_EDGE_EDGE);
+    let per_edge_routing: bool = a.graph(graph).properties.get(&lopts::PER_EDGE_ROUTING);
 
     for &dummy in north_south_dummies {
         let side: PortSide = a.node(dummy).properties.get(&iprops::EXT_PORT_SIDE);
@@ -307,6 +308,7 @@ fn route_edges(
             RoutingDirection::SouthToNorth,
             edge_spacing,
             "extnorth",
+            per_edge_routing,
         );
         let offset_y = a.graph(graph).offset.y;
         let slots = generator.route_edges(
@@ -329,6 +331,7 @@ fn route_edges(
             RoutingDirection::NorthToSouth,
             edge_spacing,
             "extsouth",
+            per_edge_routing,
         );
         let start = a.graph(graph).size.y + node_spacing - a.graph(graph).offset.y;
         let slots = generator.route_edges(

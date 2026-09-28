@@ -328,6 +328,10 @@ pub static FEEDBACK_EDGES: Property<bool> = Property::with_default("org.eclipse.
 pub static INTERACTIVE_REFERENCE_POINT: Property<InteractiveReferencePoint> = Property::with_default("org.eclipse.elk.layered.interactiveReferencePoint", || InteractiveReferencePoint::CENTER);
 pub static MERGE_EDGES: Property<bool> = Property::with_default("org.eclipse.elk.layered.mergeEdges", || false);
 pub static MERGE_HIERARCHY_EDGES: Property<bool> = Property::with_default("org.eclipse.elk.layered.mergeHierarchyEdges", || true);
+/// elkrs extension: route every modeled edge through its own orthogonal
+/// segment instead of treating all edges incident to one port as a hyperedge.
+/// Disabled by default to preserve ELK-compatible output.
+pub static PER_EDGE_ROUTING: Property<bool> = Property::with_default("elkrs.layered.orthogonal.perEdgeRouting", || false);
 pub static ALLOW_NON_FLOW_PORTS_TO_SWITCH_SIDES: Property<bool> = Property::with_default("org.eclipse.elk.layered.allowNonFlowPortsToSwitchSides", || false);
 pub static PORT_SORTING_STRATEGY: Property<PortSortingStrategy> = Property::with_default("org.eclipse.elk.layered.portSortingStrategy", || PortSortingStrategy::INPUT_ORDER);
 pub static THOROUGHNESS: Property<i32> = Property::with_default("org.eclipse.elk.layered.thoroughness", || 7);
@@ -485,6 +489,7 @@ pub fn register_layered_options(reg: &mut LayoutMetaDataRegistry) {
     reg.register_option(OptionData { id: "org.eclipse.elk.layered.interactiveReferencePoint", group: "", kind: OptionKind::Enum(parse_enum::<InteractiveReferencePoint>), targets: Targets::PARENTS, legacy_ids: &[] });
     reg.register_option(OptionData { id: "org.eclipse.elk.layered.mergeEdges", group: "", kind: OptionKind::Bool, targets: Targets::PARENTS, legacy_ids: &[] });
     reg.register_option(OptionData { id: "org.eclipse.elk.layered.mergeHierarchyEdges", group: "", kind: OptionKind::Bool, targets: Targets::PARENTS, legacy_ids: &[] });
+    reg.register_option(OptionData { id: "elkrs.layered.orthogonal.perEdgeRouting", group: "", kind: OptionKind::Bool, targets: Targets::PARENTS, legacy_ids: &[] });
     reg.register_option(OptionData { id: "org.eclipse.elk.layered.allowNonFlowPortsToSwitchSides", group: "", kind: OptionKind::Bool, targets: Targets::PORTS, legacy_ids: &["org.eclipse.elk.layered.northOrSouthPort"] });
     reg.register_option(OptionData { id: "org.eclipse.elk.layered.portSortingStrategy", group: "", kind: OptionKind::Enum(parse_enum::<PortSortingStrategy>), targets: Targets::PARENTS, legacy_ids: &[] });
     reg.register_option(OptionData { id: "org.eclipse.elk.layered.thoroughness", group: "", kind: OptionKind::Int, targets: Targets::PARENTS, legacy_ids: &[] });
