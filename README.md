@@ -103,7 +103,8 @@ python3 tools/compare_layouts.py oracle.json rust.json      # exact numeric diff
 `elkrs.layered.orthogonal.perEdgeRouting=true` changes the layered orthogonal
 router to assign a separate routing segment to every edge, even when several
 edges share a port. It also prevents long-edge dummy nodes for those edges from
-being merged. This keeps individual relationships traceable in notations such
+being merged. Shared ports use a 16-unit stub and 4-unit fan-out lanes before
+the routes separate. This keeps individual relationships traceable in notations such
 as SysML v2, where sharing a port does not make the relationships one net. The
 option is disabled by default and has no ELK counterpart, so ordinary layouts
 retain byte-identical ELK 0.11.0 behavior.

@@ -5,7 +5,7 @@ use crate::graph::math::KVector;
 use crate::alg_layered::graph::{LEdgeId, LGraphArena, LPortId};
 use crate::alg_layered::options_gen as lopts;
 
-use super::hyper_edge_segment::{SegmentId, SegmentStore};
+use super::hyper_edge_segment::{edge_lane_offset, SegmentId, SegmentStore};
 use super::orthogonal_routing_generator::TOLERANCE;
 
 /// Enumeration of available routing directions.
@@ -26,6 +26,8 @@ pub struct BaseRoutingDirectionStrategy {
     /// equality).
     created_junction_points: Vec<KVector>,
 }
+
+const PER_EDGE_PORT_STUB_LENGTH: f64 = 16.0;
 
 impl BaseRoutingDirectionStrategy {
     /// `forRoutingDirection`.
@@ -132,14 +134,34 @@ impl BaseRoutingDirectionStrategy {
         }
         let source = a.edge(edge).source.unwrap();
         let target = a.edge(edge).target.unwrap();
-        let source_pos = self.absolute_anchor_coordinate(a, source);
-        let target_pos = self.absolute_anchor_coordinate(a, target);
-        if (source_pos - target_pos).abs() <= TOLERANCE {
+        let per_edge = store.segments[segment].edge.is_some();
+        let source_anchor = self.absolute_anchor_coordinate(a, source);
+        let target_anchor = self.absolute_anchor_coordinate(a, target);
+        let source_pos = source_anchor
+            + if per_edge { edge_lane_offset(a, source, edge) } else { 0.0 };
+        let target_pos = target_anchor
+            + if per_edge { edge_lane_offset(a, target, edge) } else { 0.0 };
+        let source_fans_out = per_edge && (source_pos - source_anchor).abs() > TOLERANCE;
+        let target_fans_out = per_edge && (target_pos - target_anchor).abs() > TOLERANCE;
+        if (source_pos - target_pos).abs() <= TOLERANCE
+            && !source_fans_out
+            && !target_fans_out
+        {
             return;
         }
 
         let mut current_coordinate = segment_coordinate;
         let mut current_segment = segment;
+        if source_fans_out {
+            let source_stub = self.absolute_anchor_routing_coordinate(a, source)
+                + self.routing_sign() * PER_EDGE_PORT_STUB_LENGTH;
+            a.edge_mut(edge)
+                .bend_points
+                .add_last(self.make_bend(source_stub, source_anchor));
+            a.edge_mut(edge)
+                .bend_points
+                .add_last(self.make_bend(source_stub, source_pos));
+        }
         let bend = self.make_bend(current_coordinate, source_pos);
         a.edge_mut(edge).bend_points.add_last(bend);
         self.add_junction_point_if_necessary(a, edge, store, current_segment, bend);
@@ -161,6 +183,16 @@ impl BaseRoutingDirectionStrategy {
         let bend = self.make_bend(current_coordinate, target_pos);
         a.edge_mut(edge).bend_points.add_last(bend);
         self.add_junction_point_if_necessary(a, edge, store, current_segment, bend);
+        if target_fans_out {
+            let target_stub = self.absolute_anchor_routing_coordinate(a, target)
+                - self.routing_sign() * PER_EDGE_PORT_STUB_LENGTH;
+            a.edge_mut(edge)
+                .bend_points
+                .add_last(self.make_bend(target_stub, target_pos));
+            a.edge_mut(edge)
+                .bend_points
+                .add_last(self.make_bend(target_stub, target_anchor));
+        }
     }
 
     /// `port.getAbsoluteAnchor()` projected onto the hyperedge axis: the y
@@ -173,6 +205,25 @@ impl BaseRoutingDirectionStrategy {
             RoutingDirection::NorthToSouth | RoutingDirection::SouthToNorth => {
                 node.pos.x + p.pos.x + p.anchor.x
             }
+        }
+    }
+
+    fn absolute_anchor_routing_coordinate(&self, a: &LGraphArena, port: LPortId) -> f64 {
+        let p = a.port(port);
+        let node = a.node(p.node.unwrap());
+        match self.direction {
+            RoutingDirection::WestToEast => node.pos.x + p.pos.x + p.anchor.x,
+            RoutingDirection::NorthToSouth | RoutingDirection::SouthToNorth => {
+                node.pos.y + p.pos.y + p.anchor.y
+            }
+        }
+    }
+
+    fn routing_sign(&self) -> f64 {
+        if self.direction == RoutingDirection::SouthToNorth {
+            -1.0
+        } else {
+            1.0
         }
     }
 
@@ -207,6 +258,9 @@ impl BaseRoutingDirectionStrategy {
         }
 
         let seg = &store.segments[segment];
+        if seg.edge.is_some() {
+            return;
+        }
 
         // Whether the point lies somewhere inside the edge segment (without boundaries)
         let point_inside_edge_segment = p > seg.start_coordinate() && p < seg.end_coordinate();

@@ -70,6 +70,35 @@ fn trunk_coordinates(output: &Value) -> Vec<f64> {
         .collect()
 }
 
+fn route_points(edge: &Value) -> Vec<(f64, f64)> {
+    let section = &edge["sections"][0];
+    let point = |value: &Value| (value["x"].as_f64().unwrap(), value["y"].as_f64().unwrap());
+    let mut points = vec![point(&section["startPoint"])];
+    points.extend(
+        section["bendPoints"]
+            .as_array()
+            .into_iter()
+            .flatten()
+            .map(point),
+    );
+    points.push(point(&section["endPoint"]));
+    points
+}
+
+fn collinear_overlap(a: ((f64, f64), (f64, f64)), b: ((f64, f64), (f64, f64))) -> f64 {
+    if a.0.1 == a.1.1 && b.0.1 == b.1.1 && a.0.1 == b.0.1 {
+        return (a.0.0.max(a.1.0).min(b.0.0.max(b.1.0))
+            - a.0.0.min(a.1.0).max(b.0.0.min(b.1.0)))
+        .max(0.0);
+    }
+    if a.0.0 == a.1.0 && b.0.0 == b.1.0 && a.0.0 == b.0.0 {
+        return (a.0.1.max(a.1.1).min(b.0.1.max(b.1.1))
+            - a.0.1.min(a.1.1).max(b.0.1.min(b.1.1)))
+        .max(0.0);
+    }
+    0.0
+}
+
 #[test]
 fn shared_port_edges_get_individual_routing_channels() {
     let merged = layout(false);
@@ -87,6 +116,26 @@ fn shared_port_edges_get_individual_routing_channels() {
         separate_trunks.windows(2).any(|pair| pair[0] != pair[1]),
         "per-edge routing must give each modeled edge its own channel: {separate_trunks:?}"
     );
+
+    let edges = separate["edges"].as_array().unwrap();
+    for (left_index, left) in edges.iter().enumerate() {
+        let left_points = route_points(left);
+        for right in edges.iter().skip(left_index + 1) {
+            let right_points = route_points(right);
+            let max_overlap = left_points
+                .windows(2)
+                .flat_map(|left| {
+                    right_points.windows(2).map(move |right| {
+                        collinear_overlap((left[0], left[1]), (right[0], right[1]))
+                    })
+                })
+                .fold(0.0, f64::max);
+            assert!(
+                max_overlap <= 16.001,
+                "shared routes must separate after the short port stub: {max_overlap}"
+            );
+        }
+    }
 }
 
 #[test]

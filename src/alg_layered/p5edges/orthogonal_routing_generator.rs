@@ -13,7 +13,7 @@ use crate::alg_layered::graph::{LEdgeId, LGraphArena, LNodeId, LPortId};
 
 use super::direction::{BaseRoutingDirectionStrategy, RoutingDirection};
 use super::hyper_edge_cycle_detector;
-use super::hyper_edge_segment::{SegmentId, SegmentStore};
+use super::hyper_edge_segment::{edge_lane_offset, SegmentId, SegmentStore};
 use super::hyper_edge_segment_dependency as dependency;
 use super::hyper_edge_segment_splitter;
 
@@ -156,9 +156,10 @@ impl OrthogonalRoutingGenerator {
         let mut rank_count = -1;
         for &node in &edge_segments {
             // edges that are just straight lines don't take up a slot and don't need bend points
-            if (store.segments[node].start_coordinate() - store.segments[node].end_coordinate())
-                .abs()
-                < TOLERANCE
+            if store.segments[node].edge.is_none()
+                && (store.segments[node].start_coordinate() - store.segments[node].end_coordinate())
+                    .abs()
+                    < TOLERANCE
             {
                 continue;
             }
@@ -205,8 +206,20 @@ impl OrthogonalRoutingGenerator {
                     let target = a.edge(edge).target.expect("edge without target");
                     let segment = store.create_segment();
                     store.segments[segment].edge = Some(edge);
-                    store.add_port_position(a, segment, source, &self.routing_strategy);
-                    store.add_port_position(a, segment, target, &self.routing_strategy);
+                    store.add_port_position_with_offset(
+                        a,
+                        segment,
+                        source,
+                        &self.routing_strategy,
+                        edge_lane_offset(a, source, edge),
+                    );
+                    store.add_port_position_with_offset(
+                        a,
+                        segment,
+                        target,
+                        &self.routing_strategy,
+                        edge_lane_offset(a, target, edge),
+                    );
                     edge_segments.push(segment);
                 }
             }

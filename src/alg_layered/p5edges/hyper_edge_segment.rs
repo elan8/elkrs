@@ -15,6 +15,28 @@ pub type SegmentId = usize;
 /// Index of a dependency in the [`SegmentStore`].
 pub type DependencyId = usize;
 
+/// Visual separation between lanes that fan out from the same port.
+pub const PER_EDGE_LANE_SPACING: f64 = 4.0;
+
+pub fn edge_lane_offset(a: &LGraphArena, port: LPortId, edge: LEdgeId) -> f64 {
+    let incident_edges: Vec<LEdgeId> = a
+        .port(port)
+        .incoming_edges
+        .iter()
+        .chain(a.port(port).outgoing_edges.iter())
+        .copied()
+        .filter(|candidate| !a.edge_is_self_loop(*candidate))
+        .collect();
+    if incident_edges.len() <= 1 {
+        return 0.0;
+    }
+    let index = incident_edges
+        .iter()
+        .position(|candidate| *candidate == edge)
+        .expect("edge is not incident to its port");
+    (index as f64 - (incident_edges.len() - 1) as f64 / 2.0) * PER_EDGE_LANE_SPACING
+}
+
 pub struct HyperEdgeSegment {
     /// When set, this segment belongs to exactly one modeled edge. `None`
     /// retains ELK's port-net/hyperedge behavior.
@@ -203,10 +225,21 @@ impl SegmentStore {
         port: LPortId,
         strategy: &BaseRoutingDirectionStrategy,
     ) {
+        self.add_port_position_with_offset(a, seg, port, strategy, 0.0);
+    }
+
+    pub fn add_port_position_with_offset(
+        &mut self,
+        a: &LGraphArena,
+        seg: SegmentId,
+        port: LPortId,
+        strategy: &BaseRoutingDirectionStrategy,
+        offset: f64,
+    ) {
         if !self.segments[seg].ports.contains(&port) {
             self.segments[seg].ports.push(port);
         }
-        let port_pos = strategy.port_position_on_hyper_node(a, port);
+        let port_pos = strategy.port_position_on_hyper_node(a, port) + offset;
         if a.port(port).side == strategy.source_port_side() {
             insert_sorted(&mut self.segments[seg].incoming_connection_coordinates, port_pos);
         } else {
