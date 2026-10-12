@@ -257,3 +257,85 @@ fn issue682_node_label_placement() {
         assert!((w - (lx + 23.0 + 32.0)).abs() < EPS, "[{dir}] node.width = {w}");
     }
 }
+
+/// A nested graph that activates partitioning partitions its own children, as the top-level
+/// graph does, also when those children connect only to the boundary of the nested graph. A
+/// node whose only edges go to the graph's external ports is otherwise pinned to the first or
+/// last layer, which the edges between partitions then contradict.
+#[test]
+fn nested_graph_partitioning() {
+    let child = |id: &str, partition: i32| {
+        json!({
+            "id": id, "width": 60, "height": 40,
+            "layoutOptions": {
+                "elk.partitioning.partition": partition,
+                "elk.portConstraints": "FIXED_SIDE"
+            },
+            "ports": [
+                { "id": format!("{id}.w"), "width": 6, "height": 6,
+                  "layoutOptions": { "elk.port.side": "WEST" } },
+                { "id": format!("{id}.e"), "width": 6, "height": 6,
+                  "layoutOptions": { "elk.port.side": "EAST" } }
+            ]
+        })
+    };
+    let graph = |activate: bool, edges: Value| {
+        json!({
+            "id": "root",
+            "layoutOptions": {
+                "elk.algorithm": "layered",
+                "elk.direction": "RIGHT",
+                "elk.hierarchyHandling": "INCLUDE_CHILDREN"
+            },
+            "children": [{
+                "id": "box",
+                "layoutOptions": {
+                    "elk.partitioning.activate": activate,
+                    "elk.portConstraints": "FIXED_SIDE"
+                },
+                "ports": [
+                    { "id": "box.w", "width": 6, "height": 6,
+                      "layoutOptions": { "elk.port.side": "WEST" } },
+                    { "id": "box.e", "width": 6, "height": 6,
+                      "layoutOptions": { "elk.port.side": "EAST" } }
+                ],
+                "children": [child("a", 0), child("b", 1), child("c", 2)]
+            }],
+            "edges": edges
+        })
+    };
+    let xs = |laid_out: &Value| -> Vec<f64> {
+        ["a", "b", "c"]
+            .iter()
+            .map(|id| {
+                laid_out["children"][0]["children"]
+                    .as_array()
+                    .unwrap()
+                    .iter()
+                    .find(|child| child["id"] == *id)
+                    .and_then(|child| child["x"].as_f64())
+                    .unwrap()
+            })
+            .collect()
+    };
+    let edge = |source: &str, target: &str| json!([{ "id": "e", "sources": [source], "targets": [target] }]);
+
+    // Without partitioning, unconnected children share one layer.
+    let without = xs(&layout(graph(false, json!([]))));
+    assert!((without[0] - without[1]).abs() < EPS && (without[1] - without[2]).abs() < EPS);
+
+    // With it they stand in the order of their partitions, whatever connects them to the
+    // boundary of the nested graph.
+    for edges in [
+        json!([]),
+        edge("box.w", "b.w"),
+        edge("b.w", "box.w"),
+        edge("a.e", "box.e"),
+        edge("box.e", "a.e"),
+        edge("c.e", "box.e"),
+    ] {
+        let with = xs(&layout(graph(true, edges.clone())));
+        assert!(with[0] + 60.0 <= with[1] + EPS, "{edges}: {with:?}");
+        assert!(with[1] + 60.0 <= with[2] + EPS, "{edges}: {with:?}");
+    }
+}
