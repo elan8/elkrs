@@ -339,3 +339,85 @@ fn nested_graph_partitioning() {
         assert!(with[1] + 60.0 <= with[2] + EPS, "{edges}: {with:?}");
     }
 }
+
+/// Partition IDs are inert when their owning graph does not activate partitioning,
+/// including when a parent graph activates it.
+#[test]
+fn inactive_partitioning_preserves_boundary_layers() {
+    let child = |id: &str| {
+        json!({
+            "id": id, "width": 60, "height": 40,
+            "layoutOptions": { "elk.portConstraints": "FIXED_SIDE" },
+            "ports": [
+                { "id": format!("{id}.w"), "width": 6, "height": 6,
+                  "layoutOptions": { "elk.port.side": "WEST" } },
+                { "id": format!("{id}.e"), "width": 6, "height": 6,
+                  "layoutOptions": { "elk.port.side": "EAST" } }
+            ]
+        })
+    };
+    for parent_active in [false, true] {
+        for explicit_false in [false, true] {
+            for side in ["w", "e"] {
+                let mut owner = json!({
+                    "id": "box",
+                    "layoutOptions": {
+                        "elk.algorithm": "layered",
+                        "elk.direction": "RIGHT",
+                        "elk.hierarchyHandling": "INCLUDE_CHILDREN",
+                        "elk.portConstraints": "FIXED_SIDE"
+                    },
+                    "ports": [
+                        { "id": "box.w", "width": 6, "height": 6,
+                          "layoutOptions": { "elk.port.side": "WEST" } },
+                        { "id": "box.e", "width": 6, "height": 6,
+                          "layoutOptions": { "elk.port.side": "EAST" } }
+                    ],
+                    "children": [child("a"), child("b"), child("c"), child("d")],
+                    "edges": [
+                        { "id": "ac", "sources": ["a.e"], "targets": ["c.w"] },
+                        { "id": "cd", "sources": ["c.e"], "targets": ["d.w"] },
+                        { "id": "boundary",
+                          "sources": [if side == "w" { "box.w" } else { "b.e" }],
+                          "targets": [if side == "w" { "b.w" } else { "box.e" }] }
+                    ]
+                });
+                if explicit_false {
+                    owner["layoutOptions"]["elk.partitioning.activate"] = json!(false);
+                }
+                let graph = |owner: Value| {
+                    json!({
+                        "id": "root",
+                        "layoutOptions": {
+                            "elk.algorithm": "layered",
+                            "elk.direction": "RIGHT",
+                            "elk.hierarchyHandling": "INCLUDE_CHILDREN",
+                            "elk.partitioning.activate": parent_active
+                        },
+                        "children": [owner]
+                    })
+                };
+                let without = layout(graph(owner.clone()));
+                owner["children"][1]["layoutOptions"]["elk.partitioning.partition"] = json!(1);
+                let mut with = layout(graph(owner));
+                let with_owner = &mut with["children"][0];
+                let xs: Vec<f64> = with_owner["children"]
+                    .as_array()
+                    .unwrap()
+                    .iter()
+                    .map(|node| node["x"].as_f64().unwrap())
+                    .collect();
+                let boundary_layer = if side == "w" { xs[0] } else { xs[3] };
+                assert!(
+                    (xs[1] - boundary_layer).abs() < EPS,
+                    "{parent_active}/{explicit_false}/{side}: {xs:?}"
+                );
+                with_owner["children"][1]["layoutOptions"]
+                    .as_object_mut()
+                    .unwrap()
+                    .remove("org.eclipse.elk.partitioning.partition");
+                assert_eq!(with, without, "{parent_active}/{explicit_false}/{side}");
+            }
+        }
+    }
+}
