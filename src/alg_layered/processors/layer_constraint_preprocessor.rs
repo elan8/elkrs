@@ -136,6 +136,21 @@ fn update_opposite_node_layer_constraints(
         return;
     }
 
+    // A node that connects only to hidden nodes is pinned to the layer next to them. A node
+    // with a partition gets its layer from the partition when its graph activates partitioning:
+    // the partition midprocessor connects it to neighbouring partitions, and a pinned node
+    // may not have those edges ("layer constraint set to FIRST, but has at least one incoming edge"). This
+    // is the case of a nested graph with partitions whose children connect to its boundary.
+    if a.node(opposite_node)
+        .properties
+        .has(&lopts::PARTITIONING_PARTITION)
+        && a.node(opposite_node).graph.is_some_and(|graph| {
+            a.graph(graph).properties.get(&lopts::PARTITIONING_ACTIVATE)
+        })
+    {
+        return;
+    }
+
     match connections {
         HiddenNodeConnections::FIRST_SEPARATE => {
             a.node(opposite_node)

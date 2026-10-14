@@ -179,3 +179,16 @@ byte-exact. They are recorded so future cases are chosen with the caveats in min
      placement option flips `V_TOP`→`V_BOTTOM`. RIGHT/DOWN/LEFT fully exact.
    - The `restoreDummy` PORT_LABELS branch (N/S external-port-label margins)
      returns `Err` — unreached by any tested input.
+7. **Partitions in a nested graph** — a deliberate extension, not a port. ELK
+   reads `elk.partitioning.activate` on the top-level graph only; `elkrs` also
+   honours it on a nested graph, whose children are then partitioned among
+   themselves. To make that usable, a node that carries a partition in a graph
+   with active partitioning is not pinned to the first or last layer when its
+   only edges go to the graph's
+   external ports (`LayerConstraintPreprocessor`): its layer comes from its
+   partition, and the edges the partition midprocessor adds would contradict
+   the pin ("layer constraint set to FIRST, but has at least one incoming
+   edge"). Partition IDs have no effect when their graph leaves partitioning
+   disabled, even if a parent graph activates it.
+   Covered by `nested_graph_partitioning` and
+   `inactive_partitioning_preserves_boundary_layers` in `tests/junit_layered_issues.rs`.

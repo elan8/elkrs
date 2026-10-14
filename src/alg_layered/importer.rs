@@ -330,6 +330,16 @@ impl<'g> ElkGraphImporter<'g> {
                     let ng = self.create_lgraph(elknode, a)?;
                     a.graph(ng).properties.set(&lopts::DIRECTION, parent_graph_direction);
 
+                    // Partitioning is a property of each graph that activates it, as
+                    // in #importGraph(...) for the top-level graph: a nested graph
+                    // that sets it partitions its own children.
+                    if a.graph(ng).properties.get(&lopts::PARTITIONING_ACTIVATE) {
+                        let mut gp: EnumSet<GraphProperties> =
+                            a.graph(ng).properties.get(&iprops::GRAPH_PROPERTIES);
+                        gp.add(GraphProperties::PARTITIONS);
+                        a.graph(ng).properties.set(&iprops::GRAPH_PROPERTIES, gp);
+                    }
+
                     // Apply a spacing configuration, for details see comment
                     // in #importGraph(...)
                     if a.graph(ng).properties.has(&lopts::SPACING_BASE_VALUE) {
